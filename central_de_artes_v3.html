@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Central de Artes · Germisul · Pasto Brasil</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Manrope',sans-serif;background:#EFEDE7;min-height:100vh;color:#1A1A1A;font-size:16px;line-height:1.5}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#EFEDE7}::-webkit-scrollbar-thumb{background:#C8C0B0;border-radius:3px}
+button,input,select,textarea{font-family:'Manrope',sans-serif}
+.hdr{background:#1C1C1C;height:66px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.hdr-logo{font-size:17px;font-weight:800;color:#F5F5F3;letter-spacing:-.4px}
+.hdr-sub{font-size:12px;color:#666;margin-top:-3px}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.btn-gestao{background:transparent;border:1px solid #383838;color:#888;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-gestao.on{background:#383838;color:#F5F5F3;border-color:#383838}
+.btn-gestao:hover{border-color:#666;color:#CCC}
+.btn-solicitar{background:#F5F5F3;color:#1C1C1C;border:none;padding:9px 22px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-solicitar:hover{background:#E5E5E3}
+.toolbar{background:#E8E5DE;border-bottom:1px solid #D5D0C6;padding:11px 32px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:transparent;border:1px solid #CAC4B8;color:#6A6358;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:.12s}
+.pill.on{background:#1C1C1C;color:#F5F5F3;border-color:#1C1C1C;font-weight:700}
+.pill:hover:not(.on){border-color:#999}
+.tb-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sel{border:1px solid #CAC4B8;background:white;border-radius:8px;padding:7px 28px 7px 12px;font-size:13px;color:#3A3530;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;font-family:'Manrope',sans-serif;font-weight:500}
+.btn-meus{background:white;border:1px solid #CAC4B8;color:#3A3530;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:.12s}
+.btn-meus.on{background:#1C1C1C;color:#F5F5F3;border-color:#1C1C1C;font-weight:700}
+.srch{border:1px solid #CAC4B8;background:white;border-radius:8px;padding:7px 13px;font-size:13px;color:#3A3530;width:160px}
+.srch:focus{outline:2px solid #555;outline-offset:1px}
+.userbar{background:#FFFBEE;border:1px solid #EAD060;border-radius:11px;padding:13px 22px;margin:22px 32px 0;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.userbar-lbl{font-size:14px;color:#7A5A00;font-weight:500}
+.userbar-inp{border:1px solid #E0CC90;border-radius:8px;padding:8px 13px;font-size:14px;width:210px}
+.userbar-btn{background:#1C1C1C;color:#F5F5F3;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer}
+.sort-note{font-size:13px;color:#AAA;padding:8px 32px 0;display:flex;align-items:center;gap:6px}
+.cards-wrap{padding:20px 32px 56px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{background:white;border-radius:14px;border:1px solid #E2DDD4;overflow:hidden;cursor:pointer;transition:box-shadow .15s,transform .12s}
+.card:hover{box-shadow:0 6px 24px rgba(0,0,0,.10);transform:translateY(-2px)}
+.card.delivered{opacity:.65}
+.stripe{height:4px}
+.cbody{padding:18px 20px 16px}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
+.cname{font-size:16px;font-weight:800;color:#1A1A1A;line-height:1.2}
+.cbadges{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;align-items:center}
+.ebadge{font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 10px;border-radius:5px}
+.ebadge.g{background:#D8F0C8;color:#185A28}
+.ebadge.p{background:#D2E6F8;color:#0A3D80}
+.fbadge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:5px;background:#F0EDE4;color:#5A5048}
+.sbadge{font-size:12px;font-weight:700;padding:4px 13px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.ctipo{font-size:15px;font-weight:600;color:#2A2A2A;margin-bottom:9px;line-height:1.4}
+.onde-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.otag{font-size:11px;color:#6B6050;background:#F2EDE3;padding:3px 9px;border-radius:5px;font-weight:500}
+.cdates{display:flex;gap:16px;font-size:13px;color:#AAA;margin-bottom:6px;flex-wrap:wrap}
+.cdates strong{color:#555}
+.prazo-real-lbl{color:#1A1A1A;font-weight:700}
+.atrasado-tag{font-size:12px;color:#B91C1C;font-weight:700;background:#FEF2F2;border-radius:5px;padding:2px 9px;display:inline-block;margin-bottom:7px}
+.devtime-lbl{font-size:13px;color:#059669;font-weight:600;margin-bottom:6px}
+.info-preview{font-size:13px;color:#8A7E70;border-top:1px solid #F0EDE5;padding-top:10px;margin-top:6px;line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:pre-wrap;word-break:break-word}
+.ver-mais{font-size:12px;color:#666;margin-top:5px;font-weight:600}
+.cfooter{margin-top:10px;font-size:12px;color:#C0B8A8;display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid #F5F2ED}
+.admin-strip{border-top:1px solid #EDE9E0;padding:12px 20px;background:#FAFAF7}
+.admin-micro-label{font-size:10px;font-weight:800;color:#CCC;letter-spacing:1px;margin-bottom:8px}
+.prazo-real-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.prazo-real-row label{font-size:13px;color:#666;flex-shrink:0;width:85px;font-weight:500}
+.prazo-real-row input{flex:1;border:1px solid #D8D2C5;border-radius:7px;padding:6px 10px;font-size:13px}
+.sbtn-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sbtn{font-size:12px;padding:5px 12px;border-radius:7px;border:1px solid #D5CFC5;background:transparent;color:#999;cursor:pointer;transition:.1s;font-weight:500}
+.sbtn.s-aguardando{border-color:#D97706;background:#FFFBEB;color:#92400E;font-weight:700}
+.sbtn.s-em_producao{border-color:#2563EB;background:#EFF6FF;color:#1E40AF;font-weight:700}
+.sbtn.s-entregue{border-color:#059669;background:#ECFDF5;color:#065F46;font-weight:700}
+.btn-del{font-size:12px;padding:5px 12px;border-radius:7px;border:1px solid #FECACA;background:transparent;color:#EF4444;margin-left:auto;cursor:pointer;font-weight:600}
+.btn-del:hover{background:#FEF2F2}
+.empty{text-align:center;padding:72px 20px;color:#9A8E7A}
+.empty i{font-size:48px;display:block;margin-bottom:16px}
+.empty h3{font-size:21px;font-weight:800;color:#5A4E40;margin-bottom:7px}
+.empty p{font-size:15px}
+.ovl{position:fixed;inset:0;background:rgba(8,8,8,.72);display:flex;align-items:center;justify-content:center;z-index:500;padding:20px}
+.ovl-bottom{position:fixed;inset:0;background:rgba(8,8,8,.72);display:flex;align-items:flex-end;justify-content:center;z-index:500}
+.dmodal{background:white;border-radius:20px;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.dmodal-head{padding:28px 30px 20px;border-bottom:1px solid #EDE9E0;position:sticky;top:0;background:white;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dmodal-name{font-size:22px;font-weight:800;color:#1A1A1A;line-height:1.2}
+.dmodal-badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.btn-x{background:#F0EDE6;border:none;border-radius:9px;width:36px;height:36px;font-size:22px;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
+.dmodal-body{padding:24px 30px 32px}
+.dsection{margin-bottom:22px}
+.dsec-title{font-size:11px;font-weight:800;color:#BBB;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.dtipo{font-size:20px;font-weight:700;color:#1A1A1A;line-height:1.3}
+.dmeta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dmeta-item{background:#F8F6F1;border-radius:10px;padding:12px 15px}
+.dmeta-label{font-size:11px;font-weight:700;color:#AAA;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.dmeta-val{font-size:15px;font-weight:600;color:#1A1A1A}
+.dmeta-val.green{color:#0F6E3A}
+.dmeta-val.atrasado{color:#B91C1C}
+.dinfo{font-size:15px;color:#5A5048;line-height:1.7;white-space:pre-wrap;word-break:break-word;background:#F8F6F1;border-radius:12px;padding:16px 18px}
+.dinfo-empty{font-size:14px;color:#BBB;font-style:italic}
+.dtags-wrap{display:flex;flex-wrap:wrap;gap:7px}
+.dtag{font-size:13px;font-weight:600;background:#EDE9E0;color:#5A5048;padding:5px 13px;border-radius:20px}
+.demail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.demail-item{font-size:14px;color:#3A3530}
+.demail-lbl{font-size:11px;color:#AAA;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px}
+.ddev{background:#ECFDF5;border-radius:10px;padding:12px 16px;font-size:15px;color:#065F46;font-weight:700}
+.datrasado-box{background:#FEF2F2;border-radius:10px;padding:12px 16px;font-size:14px;color:#B91C1C;font-weight:700}
+.fmodal{background:#FAF9F5;border-radius:22px 22px 0 0;width:100%;max-width:720px;max-height:93vh;overflow-y:auto;padding:30px 34px 52px;animation:slideup .22s ease}
+@keyframes slideup{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.fmodal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px;gap:12px}
+.fmodal-title{font-size:23px;font-weight:800;color:#1A1A1A}
+.fmodal-sub{font-size:14px;color:#7A6E5A;margin-top:4px;font-weight:500}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fcol2{grid-column:1/-1}
+.fld label{display:block;font-size:12px;font-weight:800;color:#4A3F30;letter-spacing:.5px;margin-bottom:7px;text-transform:uppercase}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid #D8D2C5;border-radius:9px;padding:12px 15px;font-size:15px;background:white;color:#1A1A1A;transition:.12s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #333;outline-offset:1px}
+.fld input.e,.fld select.e,.fld textarea.e{border-color:#EF4444}
+.fld select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;background-color:white;padding-right:32px}
+.fld textarea{resize:vertical;line-height:1.6;font-size:14px}
+.err{font-size:12px;color:#EF4444;margin-top:4px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;padding:7px 16px;border-radius:20px;border:1px solid #D8D2C5;background:white;color:#6B6050;cursor:pointer;transition:.12s;font-weight:500}
+.chip.on{border-color:#1A1A1A;background:#1A1A1A;color:#F5F5F3;font-weight:600}
+.chip:hover:not(.on){border-color:#999}
+.sep{border:none;border-top:1px solid #EDE9E0;margin:14px 0}
+.extra-lbl{font-size:11px;font-weight:800;color:#888;letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px}
+.ffoot{display:flex;gap:13px;margin-top:26px}
+.btn-cancel2{flex:1;padding:14px;border:1px solid #D8D2C5;border-radius:11px;background:white;color:#6B6050;font-size:15px;cursor:pointer;font-weight:500}
+.btn-sub{flex:2;padding:14px;border:none;border-radius:11px;background:#1C1C1C;color:#F5F5F3;font-size:15px;font-weight:700;cursor:pointer}
+.btn-sub:hover{background:#333}
+.pinbox{background:white;border-radius:18px;padding:36px;width:320px;animation:pop .2s}
+.pin-t{font-size:22px;font-weight:800;color:#1A1A1A;margin-bottom:7px}
+.pin-s{font-size:14px;color:#888;margin-bottom:22px;line-height:1.5;font-weight:500}
+.pin-inp{width:100%;border:1px solid #DDD;border-radius:9px;padding:13px;font-size:20px;letter-spacing:8px;text-align:center;margin-bottom:8px}
+.pin-inp.e{border-color:#EF4444}
+.pin-err{font-size:13px;color:#EF4444;margin-bottom:8px;font-weight:600}
+.pin-btns{display:flex;gap:9px;margin-top:14px}
+.pin-cancel{flex:1;padding:11px;border:1px solid #DDD;border-radius:9px;background:white;font-size:14px;color:#666;cursor:pointer;font-weight:500}
+.pin-ok{flex:1;padding:11px;border:none;border-radius:9px;background:#1C1C1C;color:white;font-size:14px;font-weight:700;cursor:pointer}
+@media(max-width:640px){
+  .fgrid{grid-template-columns:1fr}.fcol2{grid-column:1}
+  .fmodal{padding:24px 18px 44px}
+  .hdr,.toolbar,.cards-wrap,.sort-note{padding-left:16px;padding-right:16px}
+  .dmeta-grid,.demail-grid{grid-template-columns:1fr}
+  .dmodal-body{padding:18px 20px 28px}.dmodal-head{padding:22px 20px 16px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const TIPOS=["Arte para Instagram","Arte para WhatsApp","Arte para folder / panfleto","PDF informativo de produtos","Arte para representante","Papel timbrado","Divulgação de vaga","Assinatura de e-mail","Informativo interno","Edição de vídeo","Sinalização interna","Arte para sacaria","Cotação de fornecedor + arte","Demanda estratégica (planejamento)","Outros"];
+const ONDE=["Instagram Feed","Instagram Stories","WhatsApp (clientes)","WhatsApp (grupos)","E-mail","Uso interno","Impresso / Físico","Outros"];
+const FUNCOES=["Consultor(a)","RH","Diretoria","Gerência","Marketing","Outros"];
+const STATUS={aguardando:{l:"Aguardando",bg:"#FFFBEB",tc:"#92400E"},em_producao:{l:"Em produção",bg:"#EFF6FF",tc:"#1E40AF"},entregue:{l:"Entregue",bg:"#ECFDF5",tc:"#065F46"}};
+const PIN="1234"; // ← altere o PIN aqui
+
+let D=[],nome="",admin=false,showF=false,showP=false,pinV="",pinE=false;
+let fstt="all",femp="all",fmeus=false,fsrc="",delId=null;
+let form=ef(),ferr={},loading=true,sortBy="desejado",detailId=null;
+
+function ef(){return{nome:"",funcao:"",empresa:"",tipo:"",tipoOutros:"",onde:[],ondeOutros:"",prazoD:"",info:"",eNome:"",eCargo:"",eEmail:"",eTel:""};}
+
+async function load(){
+  try{const d=await window.storage.get("artes_v3");if(d)D=JSON.parse(d.value);}catch{}
+  try{const n=await window.storage.get("artes_nome");if(n)nome=n.value;}catch{}
+  loading=false;render();
+}
+async function save(){try{await window.storage.set("artes_v3",JSON.stringify(D));}catch{}}
+async function saveNome(v){try{await window.storage.set("artes_nome",v);}catch{}}
+
+function fd(ts){if(!ts)return"—";return new Date(ts).toLocaleDateString("pt-BR");}
+function fdi(v){if(!v)return"—";const[y,m,d]=v.split("-");return`${d}/${m}/${y}`;}
+function atras(d){if(!d.prazoD||d.status==="entregue")return false;return new Date(d.prazoD)<new Date();}
+function devt(a,b){if(!a||!b)return null;const diff=b-a,days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000);if(days===0)return`${hrs}h de desenvolvimento`;if(days===1)return`1 dia de desenvolvimento`;return`${days} dias de desenvolvimento`;}
+function gid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function x(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function sorted(arr){
+  return[...arr].sort((a,b)=>{
+    if(sortBy==="desejado"){const da=a.prazoD?new Date(a.prazoD):new Date("9999-12-31");const db=b.prazoD?new Date(b.prazoD):new Date("9999-12-31");return da-db;}
+    else{const da=a.prazoR?new Date(a.prazoR):new Date("9999-12-31");const db=b.prazoR?new Date(b.prazoR):new Date("9999-12-31");return da-db;}
+  });
+}
+
+function render(){document.getElementById("app").innerHTML=build();ev();}
+
+function build(){
+  if(loading)return`<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:16px;color:#888">Carregando...</div>`;
+  const cnt={all:D.length,aguardando:D.filter(d=>d.status==="aguardando").length,em_producao:D.filter(d=>d.status==="em_producao").length,entregue:D.filter(d=>d.status==="entregue").length};
+  const fil=sorted(D.filter(d=>{
+    if(fstt!=="all"&&d.status!==fstt)return false;
+    if(femp!=="all"&&d.empresa!==femp)return false;
+    if(fmeus&&nome&&d.nome.toLowerCase().trim()!==nome.toLowerCase().trim())return false;
+    if(fsrc&&!d.nome.toLowerCase().includes(fsrc.toLowerCase()))return false;
+    return true;
+  }));
+  const det=detailId?D.find(d=>d.id===detailId):null;
+  return`
+<header class="hdr">
+  <div><div class="hdr-logo">Central de Artes</div><div class="hdr-sub">Germisul · Pasto Brasil</div></div>
+  <div class="hdr-right">
+    ${nome?`<span style="font-size:14px;color:#888">Olá, <strong style="color:#F5F5F3">${x(nome.split(" ")[0])}</strong></span>`:""}
+    <button class="btn-gestao ${admin?"on":""}" id="btn-g">${admin?"✓ Gestão":"Gestão"}</button>
+    <button class="btn-solicitar" id="btn-s">+ Solicitar demanda</button>
+  </div>
+</header>
+<div class="toolbar">
+  ${["all","aguardando","em_producao","entregue"].map(k=>{const L={all:`Todas (${cnt.all})`,aguardando:`Aguardando (${cnt.aguardando})`,em_producao:`Em produção (${cnt.em_producao})`,entregue:`Entregues (${cnt.entregue})`};return`<button class="pill ${fstt===k?"on":""}" data-fs="${k}">${L[k]}</button>`;}).join("")}
+  <div class="tb-right">
+    <select class="sel" id="sel-emp">
+      <option value="all" ${femp==="all"?"selected":""}>Todas empresas</option>
+      <option value="Germisul" ${femp==="Germisul"?"selected":""}>Germisul</option>
+      <option value="Pasto Brasil" ${femp==="Pasto Brasil"?"selected":""}>Pasto Brasil</option>
+    </select>
+    <select class="sel" id="sel-sort">
+      <option value="desejado" ${sortBy==="desejado"?"selected":""}>↑ Prazo desejado</option>
+      <option value="real" ${sortBy==="real"?"selected":""}>↑ Prazo real</option>
+    </select>
+    ${nome?`<button class="btn-meus ${fmeus?"on":""}" id="btn-m">Meus pedidos</button>`:""}
+    <input class="srch" id="srch" placeholder="Buscar nome..." value="${x(fsrc)}"/>
+  </div>
+</div>
+${!nome?`<div class="userbar"><span class="userbar-lbl">Para filtrar seus pedidos, informe seu nome:</span><input id="inp-nome" class="userbar-inp" placeholder="Seu nome..."/><button class="userbar-btn" onclick="setNome()">Confirmar</button></div>`:""}
+<div class="sort-note">Ordenado por: <strong style="color:#555">${sortBy==="desejado"?"prazo desejado":"prazo real"}</strong> · clique em um card para ver os detalhes completos</div>
+<div class="cards-wrap">
+${fil.length===0?`<div class="empty"><i>📋</i><h3>${D.length===0?"Nenhuma demanda ainda":"Nenhum resultado"}</h3><p>${D.length===0?"Clique em Solicitar demanda para começar":"Tente ajustar os filtros"}</p></div>`:`<div class="cards-grid">${fil.map(d=>card(d)).join("")}</div>`}
+</div>
+${det?detailModal(det):""}
+${showF?formModal():""}
+${showP?pinModal():""}`;
+}
+
+function card(d){
+  const s=STATUS[d.status];const isG=d.empresa==="Germisul";const sc=isG?"#1A7A38":"#1550A8";
+  const tl=d.tipo==="Outros"?(d.tipoOutros||"Outros"):(d.tipo||"—");
+  const at=atras(d);const dt=devt(d.ini,d.entregueEm);const hasInfo=d.info&&d.info.trim();
+  const tagsH=d.onde&&d.onde.length?`<div class="onde-tags">${d.onde.map(o=>`<span class="otag">${x(o==="Outros"?(d.ondeOutros||"Outros"):o)}</span>`).join("")}</div>`:"";
+  return`
+<div class="card ${d.status==="entregue"?"delivered":""}" data-cid="${d.id}">
+  <div class="stripe" style="background:${sc}"></div>
+  <div class="cbody">
+    <div class="ctop">
+      <div><div class="cname">${x(d.nome)}</div><div class="cbadges"><span class="ebadge ${isG?"g":"p"}">${x(d.empresa||"—")}</span>${d.funcao?`<span class="fbadge">${x(d.funcao)}</span>`:""}</div></div>
+      <span class="sbadge" style="background:${s.bg};color:${s.tc}">${s.l}</span>
+    </div>
+    <div class="ctipo">${x(tl)}</div>
+    ${tagsH}
+    ${at?`<div class="atrasado-tag">⚠ Prazo vencido</div>`:""}
+    <div class="cdates"><span>📅 Desejado: <strong>${fdi(d.prazoD)}</strong></span>${d.prazoR?`<span>⚡ <span class="prazo-real-lbl">Real: ${fdi(d.prazoR)}</span></span>`:""}</div>
+    ${dt?`<div class="devtime-lbl">✓ ${x(dt)}</div>`:""}
+    ${hasInfo?`<div class="info-preview">${x(d.info)}</div><div class="ver-mais">Ver todos os detalhes →</div>`:""}
+    <div class="cfooter"><span>Enviado ${fd(d.criado)}</span>${d.ini?`<span style="color:#9AB8F5">Iniciado ${fd(d.ini)}</span>`:""}</div>
+  </div>
+  ${admin?adminStrip(d):""}
+</div>`;
+}
+
+function adminStrip(d){
+  return`<div class="admin-strip" onclick="event.stopPropagation()">
+  <div class="admin-micro-label">GESTÃO</div>
+  <div class="prazo-real-row"><label>Prazo real:</label><input type="date" value="${d.prazoR||""}" onchange="setPR('${d.id}',this.value)"/></div>
+  <div class="sbtn-row">
+    ${Object.entries(STATUS).map(([k,v])=>`<button class="sbtn ${d.status===k?"s-"+k:""}" onclick="setStt('${d.id}','${k}')">${v.l}</button>`).join("")}
+    ${delId===d.id?`<span style="font-size:12px;color:#EF4444;display:flex;align-items:center;gap:6px;margin-left:auto">Confirmar?<button onclick="doDelete('${d.id}')" style="background:#EF4444;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700">Sim</button><button onclick="noDelete()" style="background:#F5F5F5;border:1px solid #DDD;border-radius:5px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif">Não</button></span>`:`<button class="btn-del" onclick="askDel('${d.id}')">Excluir</button>`}
+  </div>
+</div>`;
+}
+
+function detailModal(d){
+  const s=STATUS[d.status];const isG=d.empresa==="Germisul";
+  const tl=d.tipo==="Outros"?(d.tipoOutros||"Outros"):(d.tipo||"—");
+  const at=atras(d);const dt=devt(d.ini,d.entregueEm);const isAss=d.tipo==="Assinatura de e-mail";
+  const infoExtra=isAss&&(d.eNome||d.eEmail)?`\nColaborador: ${d.eNome||"—"}  |  Cargo: ${d.eCargo||"—"}\nE-mail: ${d.eEmail||"—"}${d.eTel?" | Tel: "+d.eTel:""}` :"";
+  const fullInfo=(d.info||"")+infoExtra;
+  return`
+<div class="ovl" id="ovl-det" onclick="closeDetail(event)">
+<div class="dmodal" onclick="event.stopPropagation()">
+  <div class="dmodal-head">
+    <div>
+      <div class="dmodal-name">${x(d.nome)}</div>
+      <div class="dmodal-badges">
+        <span class="ebadge ${isG?"g":"p"}" style="font-size:12px;padding:4px 12px">${x(d.empresa||"—")}</span>
+        ${d.funcao?`<span class="fbadge" style="font-size:12px;padding:4px 12px">${x(d.funcao)}</span>`:""}
+        <span class="sbadge" style="background:${s.bg};color:${s.tc};font-size:12px">${s.l}</span>
+      </div>
+    </div>
+    <button class="btn-x" onclick="closeDetailDirect()">×</button>
+  </div>
+  <div class="dmodal-body">
+    <div class="dsection"><div class="dsec-title">Tipo de peça</div><div class="dtipo">${x(tl)}</div></div>
+    ${d.onde&&d.onde.length?`<div class="dsection"><div class="dsec-title">Onde vai ser publicado / usado</div><div class="dtags-wrap">${d.onde.map(o=>`<span class="dtag">${x(o==="Outros"?(d.ondeOutros||"Outros"):o)}</span>`).join("")}</div></div>`:""}
+    <div class="dsection">
+      <div class="dsec-title">Prazos e datas</div>
+      <div class="dmeta-grid">
+        <div class="dmeta-item"><div class="dmeta-label">Prazo desejado</div><div class="dmeta-val ${at?"atrasado":""}">${fdi(d.prazoD)}${at?" · ⚠ vencido":""}</div></div>
+        <div class="dmeta-item"><div class="dmeta-label">Prazo real</div><div class="dmeta-val ${d.prazoR?"green":""}">${d.prazoR?fdi(d.prazoR):"—"}</div></div>
+        <div class="dmeta-item"><div class="dmeta-label">Solicitado em</div><div class="dmeta-val">${fd(d.criado)}</div></div>
+        <div class="dmeta-item"><div class="dmeta-label">Início da produção</div><div class="dmeta-val">${d.ini?fd(d.ini):"—"}</div></div>
+      </div>
+    </div>
+    ${dt?`<div class="dsection"><div class="ddev">✓ ${x(dt)}</div></div>`:""}
+    ${isAss&&(d.eNome||d.eEmail)?`
+    <div class="dsection">
+      <div class="dsec-title">Dados da assinatura de e-mail</div>
+      <div class="demail-grid">
+        <div class="demail-item"><div class="demail-lbl">Nome</div>${x(d.eNome||"—")}</div>
+        <div class="demail-item"><div class="demail-lbl">Cargo</div>${x(d.eCargo||"—")}</div>
+        <div class="demail-item"><div class="demail-lbl">E-mail</div>${x(d.eEmail||"—")}</div>
+        <div class="demail-item"><div class="demail-lbl">Telefone</div>${x(d.eTel||"—")}</div>
+      </div>
+    </div>`:""}
+    <div class="dsection">
+      <div class="dsec-title">Informações e observações</div>
+      ${fullInfo.trim()?`<div class="dinfo">${x(fullInfo.trim())}</div>`:`<div class="dinfo-empty">Nenhuma observação informada.</div>`}
+    </div>
+    ${admin?`
+    <div class="dsection" style="border-top:1px solid #EDE9E0;padding-top:22px">
+      <div class="dsec-title">Gestão</div>
+      <div class="prazo-real-row" style="margin-bottom:14px">
+        <label style="font-size:14px;color:#666;flex-shrink:0;width:90px;font-weight:500">Prazo real:</label>
+        <input type="date" value="${d.prazoR||""}" onchange="setPR('${d.id}',this.value)" style="border:1px solid #D8D2C5;border-radius:9px;padding:9px 12px;font-size:14px;flex:1;font-family:'Manrope',sans-serif"/>
+      </div>
+      <div class="sbtn-row">
+        ${Object.entries(STATUS).map(([k,v])=>`<button class="sbtn ${d.status===k?"s-"+k:""}" style="font-size:13px;padding:7px 15px" onclick="setStt('${d.id}','${k}')">${v.l}</button>`).join("")}
+      </div>
+    </div>`:""}
+  </div>
+</div>
+</div>`;
+}
+
+function formModal(){
+  const isAss=form.tipo==="Assinatura de e-mail";
+  return`
+<div class="ovl-bottom" id="ovl-form" onclick="if(event.target.id==='ovl-form'){showF=false;render();}">
+<div class="fmodal">
+  <div class="fmodal-head">
+    <div><div class="fmodal-title">Nova solicitação</div><div class="fmodal-sub">Preencha com o máximo de detalhes para agilizar a produção</div></div>
+    <button class="btn-x" id="btn-xf">×</button>
+  </div>
+  <div class="fgrid">
+    <div class="fld"><label>Nome *</label><input id="fn" value="${x(form.nome)}" placeholder="Nome completo" class="${ferr.nome?"e":""}"/>${ferr.nome?`<div class="err">Campo obrigatório</div>`:""}</div>
+    <div class="fld"><label>Função *</label><select id="ffunc" class="${ferr.funcao?"e":""}"><option value="">Selecione...</option>${FUNCOES.map(f=>`<option value="${x(f)}" ${form.funcao===f?"selected":""}>${x(f)}</option>`).join("")}</select>${ferr.funcao?`<div class="err">Campo obrigatório</div>`:""}</div>
+    <div class="fld"><label>Empresa *</label><select id="femp" class="${ferr.empresa?"e":""}"><option value="">Selecione...</option><option ${form.empresa==="Germisul"?"selected":""}>Germisul</option><option ${form.empresa==="Pasto Brasil"?"selected":""}>Pasto Brasil</option></select>${ferr.empresa?`<div class="err">Campo obrigatório</div>`:""}</div>
+    <div class="fld"><label>Prazo desejado *</label><input type="date" id="fpd" value="${x(form.prazoD)}" class="${ferr.prazoD?"e":""}"/>${ferr.prazoD?`<div class="err">Campo obrigatório</div>`:""}</div>
+    <div class="fld fcol2"><label>Tipo de peça *</label><select id="ftipo" class="${ferr.tipo?"e":""}"><option value="">Selecione o tipo...</option>${TIPOS.map(t=>`<option value="${x(t)}" ${form.tipo===t?"selected":""}>${x(t)}</option>`).join("")}</select>${ferr.tipo?`<div class="err">Campo obrigatório</div>`:""}${form.tipo==="Outros"?`<input id="ftipo-o" value="${x(form.tipoOutros)}" placeholder="Descreva o tipo de peça..." style="margin-top:10px;width:100%;border:1px solid #D8D2C5;border-radius:9px;padding:12px 15px;font-size:15px;font-family:'Manrope',sans-serif"/>`:``}</div>
+    ${isAss?`<hr class="sep fcol2"/><div class="fcol2"><div class="extra-lbl">Dados para assinatura de e-mail</div></div><div class="fld"><label>Nome do colaborador</label><input id="fen" value="${x(form.eNome)}" placeholder="Nome completo"/></div><div class="fld"><label>Cargo</label><input id="fec" value="${x(form.eCargo)}" placeholder="Ex: Analista de Vendas"/></div><div class="fld"><label>E-mail</label><input id="fee" value="${x(form.eEmail)}" placeholder="colaborador@empresa.com.br"/></div><div class="fld"><label>Telefone (opcional)</label><input id="fet" value="${x(form.eTel)}" placeholder="(67) 9 9999-9999"/></div><hr class="sep fcol2"/>` :""}
+    <div class="fld fcol2"><label>Onde vai ser publicado / usado</label><div class="chips">${ONDE.map(o=>`<button type="button" class="chip ${form.onde.includes(o)?"on":""}" data-onde="${x(o)}">${x(o)}</button>`).join("")}</div>${form.onde.includes("Outros")?`<input id="fondo" value="${x(form.ondeOutros)}" placeholder="Onde será usado?" style="margin-top:10px;width:100%;border:1px solid #D8D2C5;border-radius:9px;padding:12px 15px;font-size:15px;font-family:'Manrope',sans-serif"/>`:``}</div>
+    <div class="fld fcol2"><label>Informações e observações</label><textarea id="finfo" rows="6" placeholder="Explique com detalhes o que precisa:
+
+• Sobre o quê é a arte? Produto, assunto, campanha?
+• Qual a mensagem principal que deve aparecer?
+• Há texto pronto, frase ou chamada para ação?
+• Tem referência de estilo ou cor específica?
+• Algum outro detalhe importante?">${x(form.info)}</textarea></div>
+  </div>
+  <div class="ffoot"><button class="btn-cancel2" id="btn-cf">Cancelar</button><button class="btn-sub" id="btn-sub">Enviar solicitação →</button></div>
+</div>
+</div>`;
+}
+
+function pinModal(){
+  return`<div class="ovl"><div class="pinbox"><div class="pin-t">Modo Gestão</div><div class="pin-s">Digite o PIN para acessar os controles de gestão.</div><input type="password" id="pin-inp" class="pin-inp ${pinE?"e":""}" value="${x(pinV)}" placeholder="••••" maxlength="10"/>${pinE?`<div class="pin-err">PIN incorreto.</div>`:""}<div class="pin-btns"><button class="pin-cancel" id="pin-c">Cancelar</button><button class="pin-ok" id="pin-ok">Entrar</button></div></div></div>`;
+}
+
+function ev(){
+  el("btn-s")?.addEventListener("click",()=>{form=ef();if(nome)form.nome=nome;ferr={};showF=true;render();});
+  el("btn-g")?.addEventListener("click",()=>{if(admin){admin=false;render();}else{showP=true;pinV="";pinE=false;render();}});
+  qsa("[data-fs]").forEach(b=>b.addEventListener("click",e=>{fstt=e.target.dataset.fs;render();}));
+  el("sel-emp")?.addEventListener("change",e=>{femp=e.target.value;render();});
+  el("sel-sort")?.addEventListener("change",e=>{sortBy=e.target.value;render();});
+  el("btn-m")?.addEventListener("click",()=>{fmeus=!fmeus;render();});
+  el("srch")?.addEventListener("input",e=>{fsrc=e.target.value;render();});
+  el("inp-nome")?.addEventListener("keydown",e=>{if(e.key==="Enter")setNome();});
+  qsa("[data-cid]").forEach(c=>c.addEventListener("click",e=>{if(e.target.closest(".admin-strip"))return;detailId=c.dataset.cid;render();}));
+  el("btn-xf")?.addEventListener("click",()=>{showF=false;render();});
+  el("btn-cf")?.addEventListener("click",()=>{showF=false;render();});
+  el("btn-sub")?.addEventListener("click",()=>submit());
+  el("fn")?.addEventListener("input",e=>{form.nome=e.target.value;});
+  el("ffunc")?.addEventListener("change",e=>{form.funcao=e.target.value;});
+  el("femp")?.addEventListener("change",e=>{form.empresa=e.target.value;});
+  el("fpd")?.addEventListener("change",e=>{form.prazoD=e.target.value;});
+  el("ftipo")?.addEventListener("change",e=>{form.tipo=e.target.value;render();});
+  el("ftipo-o")?.addEventListener("input",e=>{form.tipoOutros=e.target.value;});
+  el("finfo")?.addEventListener("input",e=>{form.info=e.target.value;});
+  el("fondo")?.addEventListener("input",e=>{form.ondeOutros=e.target.value;});
+  el("fen")?.addEventListener("input",e=>{form.eNome=e.target.value;});
+  el("fec")?.addEventListener("input",e=>{form.eCargo=e.target.value;});
+  el("fee")?.addEventListener("input",e=>{form.eEmail=e.target.value;});
+  el("fet")?.addEventListener("input",e=>{form.eTel=e.target.value;});
+  qsa("[data-onde]").forEach(b=>b.addEventListener("click",e=>{const o=e.target.dataset.onde,i=form.onde.indexOf(o);if(i===-1)form.onde.push(o);else form.onde.splice(i,1);const inf=el("finfo")?.value;render();if(inf&&el("finfo"))el("finfo").value=inf;}));
+  el("pin-inp")?.addEventListener("input",e=>{pinV=e.target.value;pinE=false;});
+  el("pin-inp")?.addEventListener("keydown",e=>{if(e.key==="Enter")doPin();});
+  el("pin-c")?.addEventListener("click",()=>{showP=false;render();});
+  el("pin-ok")?.addEventListener("click",()=>doPin());
+  if(showP)setTimeout(()=>el("pin-inp")?.focus(),50);
+}
+
+function el(id){return document.getElementById(id);}
+function qsa(s){return document.querySelectorAll(s);}
+
+window.setNome=function(){const v=(el("inp-nome")?.value||"").trim();if(v){nome=v;saveNome(v);render();}};
+window.closeDetail=function(e){if(e.target.id==="ovl-det"){detailId=null;render();}};
+window.closeDetailDirect=function(){detailId=null;render();};
+window.setStt=function(id,ns){
+  const now=Date.now();
+  D=D.map(d=>{if(d.id!==id)return d;const u={...d,status:ns};if(ns==="em_producao"&&!d.ini)u.ini=now;if(ns==="entregue")u.entregueEm=now;if(ns!=="entregue")u.entregueEm=null;return u;});
+  save();render();
+};
+window.setPR=function(id,val){D=D.map(d=>d.id===id?{...d,prazoR:val}:d);save();};
+window.askDel=function(id){delId=id;render();};
+window.noDelete=function(){delId=null;render();};
+window.doDelete=function(id){D=D.filter(d=>d.id!==id);delId=null;if(detailId===id)detailId=null;save();render();};
+function doPin(){const v=el("pin-inp")?.value||pinV;if(v===PIN){admin=true;showP=false;render();}else{pinE=true;pinV="";render();}}
+function submit(){
+  const ta=el("finfo");if(ta)form.info=ta.value;
+  form.nome=(el("fn")?.value||"").trim();form.funcao=el("ffunc")?.value||"";form.empresa=el("femp")?.value||"";form.tipo=el("ftipo")?.value||"";form.prazoD=el("fpd")?.value||"";
+  if(el("ftipo-o"))form.tipoOutros=el("ftipo-o").value;if(el("fen"))form.eNome=el("fen").value;if(el("fec"))form.eCargo=el("fec").value;if(el("fee"))form.eEmail=el("fee").value;if(el("fet"))form.eTel=el("fet").value;if(el("fondo"))form.ondeOutros=el("fondo").value;
+  const e={};if(!form.nome)e.nome=true;if(!form.funcao)e.funcao=true;if(!form.empresa)e.empresa=true;if(!form.tipo)e.tipo=true;if(!form.prazoD)e.prazoD=true;ferr=e;
+  if(Object.keys(e).length){render();return;}
+  const nd={id:gid(),...form,status:"aguardando",criado:Date.now(),ini:null,entregueEm:null,prazoR:null};
+  D=[nd,...D];if(form.nome&&!nome){nome=form.nome;saveNome(form.nome);}
+  save();showF=false;form=ef();ferr={};render();
+}
+load();
+</script>
+</body>
+</html>
