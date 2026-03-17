@@ -275,6 +275,94 @@ button,input,select,textarea{font-family:'Manrope',sans-serif}
   .hdr,.toolbar,.cw,.snote,.cal-w,.kanban-w,.banner,.userbar{padding-left:14px;padding-right:14px}
   .vbtn{padding:4px 8px;font-size:10px}
 }
+
+/* ── LOGIN MODAL ── */
+.login-ovl{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:16px;padding:32px;width:340px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-title{font-size:20px;font-weight:800;color:#1C1C1C;margin-bottom:4px}
+.login-sub{font-size:13px;color:#888;margin-bottom:24px}
+.login-sel{width:100%;padding:10px 14px;border:1.5px solid #E5E5E0;border-radius:8px;font-size:14px;font-family:'Manrope',sans-serif;margin-bottom:12px;background:#FAFAF8;outline:none}
+.login-sel:focus{border-color:#1C1C1C}
+.login-pin{width:100%;padding:10px 14px;border:1.5px solid #E5E5E0;border-radius:8px;font-size:18px;font-family:'Manrope',sans-serif;letter-spacing:6px;text-align:center;margin-bottom:16px;background:#FAFAF8;outline:none}
+.login-pin:focus{border-color:#1C1C1C}
+.login-err{font-size:12px;color:#DC2626;margin-bottom:10px;min-height:16px;text-align:center}
+.login-btn{width:100%;padding:12px;background:#1C1C1C;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;font-family:'Manrope',sans-serif;cursor:pointer}
+.login-btn:hover{background:#333}
+.login-close{display:block;text-align:center;margin-top:12px;font-size:12px;color:#999;cursor:pointer}
+.login-close:hover{color:#333}
+
+/* ── VISITOR POPUP ── */
+.vis-ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500;display:flex;align-items:center;justify-content:center}
+.vis-box{background:#fff;border-radius:14px;padding:28px;width:320px;max-width:90vw;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.25)}
+.vis-ico{font-size:36px;margin-bottom:12px}
+.vis-title{font-size:17px;font-weight:800;color:#1C1C1C;margin-bottom:8px}
+.vis-msg{font-size:13px;color:#666;margin-bottom:20px;line-height:1.5}
+.vis-btn{width:100%;padding:11px;background:#1C1C1C;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;font-family:'Manrope',sans-serif;cursor:pointer;margin-bottom:8px}
+.vis-btn:hover{background:#333}
+.vis-cancel{font-size:12px;color:#999;cursor:pointer}
+.vis-cancel:hover{color:#333}
+
+/* ── WELCOME POPUP ── */
+.wlc-ovl{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1800;display:flex;align-items:center;justify-content:center;padding:16px}
+.wlc-box{background:#fff;border-radius:16px;padding:0;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.wlc-head{background:#1C1C1C;padding:24px 28px;border-radius:16px 16px 0 0}
+.wlc-htitle{font-size:18px;font-weight:800;color:#F5F5F3;margin-bottom:4px}
+.wlc-hsub{font-size:12px;color:#888}
+.wlc-body{padding:24px 28px}
+.wlc-sec{margin-bottom:20px}
+.wlc-stitle{font-size:13px;font-weight:800;color:#1C1C1C;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:6px;border-bottom:1.5px solid #F0EEE8}
+.wlc-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.wlc-ico{font-size:16px;min-width:22px;margin-top:1px}
+.wlc-txt{font-size:13px;color:#444;line-height:1.5}
+.wlc-txt strong{color:#1C1C1C}
+.wlc-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.wlc-sbadge{padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;text-align:center}
+.wlc-footer{padding:16px 28px 24px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.wlc-btn{padding:10px 24px;background:#1C1C1C;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;font-family:'Manrope',sans-serif;cursor:pointer}
+.wlc-btn:hover{background:#333}
+.wlc-chk{display:flex;align-items:center;gap:6px;font-size:12px;color:#888;cursor:pointer}
+
+/* ── USER MGMT ── */
+.umgmt-ovl{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1600;display:flex;align-items:center;justify-content:center;padding:16px}
+.umgmt-box{background:#fff;border-radius:16px;width:560px;max-width:95vw;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.umgmt-head{background:#1C1C1C;padding:20px 24px;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:space-between}
+.umgmt-title{font-size:16px;font-weight:800;color:#F5F5F3}
+.umgmt-close{background:none;border:none;color:#888;font-size:20px;cursor:pointer;line-height:1}
+.umgmt-body{padding:20px 24px}
+.urow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F0EEE8}
+.urow:last-child{border-bottom:none}
+.uname{flex:1;font-size:14px;font-weight:600;color:#1C1C1C}
+.ubdg{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700}
+.ubdg.adm{background:#FEF3C7;color:#92400E}
+.ubdg.col{background:#F0F4FF;color:#1E40AF}
+.ureset{padding:5px 12px;background:#F5F5F0;border:1px solid #E5E5E0;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;color:#666}
+.ureset:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+
+/* ── CHANGE PIN ── */
+.chpin-ovl{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1700;display:flex;align-items:center;justify-content:center}
+.chpin-box{background:#fff;border-radius:14px;padding:28px;width:320px;max-width:90vw;box-shadow:0 16px 48px rgba(0,0,0,.25)}
+.chpin-title{font-size:17px;font-weight:800;margin-bottom:16px;color:#1C1C1C}
+.chpin-inp{width:100%;padding:10px 14px;border:1.5px solid #E5E5E0;border-radius:8px;font-size:18px;font-family:'Manrope',sans-serif;letter-spacing:6px;text-align:center;margin-bottom:10px;background:#FAFAF8;outline:none}
+.chpin-inp:focus{border-color:#1C1C1C}
+.chpin-err{font-size:12px;color:#DC2626;margin-bottom:10px;min-height:16px;text-align:center}
+.chpin-btns{display:flex;gap:8px}
+.chpin-ok{flex:1;padding:10px;background:#1C1C1C;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:'Manrope',sans-serif;cursor:pointer}
+.chpin-cancel{padding:10px 16px;background:#F5F5F0;border:1px solid #E5E5E0;border-radius:8px;font-size:13px;font-weight:600;font-family:'Manrope',sans-serif;cursor:pointer;color:#666}
+
+/* ── FOOTER HELP BTN ── */
+.help-fab{position:fixed;bottom:20px;right:20px;background:#1C1C1C;color:#fff;border:none;border-radius:50px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Manrope',sans-serif;cursor:pointer;z-index:900;box-shadow:0 4px 16px rgba(0,0,0,.25);display:flex;align-items:center;gap:6px}
+.help-fab:hover{background:#333}
+
+/* ── HEADER USER AREA ── */
+.hdr-user{display:flex;align-items:center;gap:8px}
+.hdr-uname{font-size:12px;color:#888;font-weight:600}
+.hdr-uname strong{color:#F5F5F3}
+.btn-logout{background:transparent;border:1px solid #383838;color:#666;padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-logout:hover{border-color:#DC2626;color:#DC2626}
+.btn-login{background:#F5F5F3;color:#1C1C1C;border:none;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer}
+.btn-login:hover{background:#E5E5E3}
+.btn-mgmt{background:transparent;border:1px solid #383838;color:#888;padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}
+.btn-mgmt:hover{border-color:#F5F5F3;color:#F5F5F3}
 </style>
 </head>
 <body>
@@ -301,10 +389,20 @@ const DIAS_S=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const PIN="2610"; // ← altere o PIN aqui
 
 // State
-let D=[],nome="",admin=false,showF=false,showP=false,pinV="",pinE=false;
+let usuarios=[];
+let sessao=JSON.parse(localStorage.getItem('ca_sessao')||'null');
+// sessao = {id, nome, is_admin} or null
+let D=[],nome=sessao?.nome||"",admin=sessao?.is_admin||false,showF=false,showP=false,pinV="",pinE=false;
 let fstt="all",femp="all",fmeus=false,fsrc="",sortBy="desejado";
 let view="lista",calY=new Date().getFullYear(),calM=new Date().getMonth();
 let detailId=null,revisaoMode=false,commText="",delId=null,loading=true;
+let showLogin=false;
+let showUserMgmt=false;
+let showChangePin=false;
+let showHelp=false;
+let showWelcome=!localStorage.getItem('ca_no_welcome')&&!sessao;
+let showVisitorPopup=false;
+let _lastFocusedId='';
 let form=ef(),ferr={};
 
 function ef(){
@@ -319,11 +417,12 @@ const SB_H={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"app
 
 // Storage
 async function loadAll(){
+  await loadUsuarios();
   try{
     const r=await fetch(SB_URL+"/rest/v1/solicitacoes?select=data&order=criado.desc",{headers:SB_H});
     if(r.ok){const rows=await r.json();D=rows.map(row=>row.data);}
   }catch{}
-  try{const n=localStorage.getItem("artes_nome");if(n)nome=n;}catch{}
+  try{const n=localStorage.getItem("artes_nome");if(n&&!sessao)nome=n;}catch{}
   loading=false;render();
 }
 async function saveD(){
@@ -367,7 +466,7 @@ function matchF(d){
   return true;
 }
 function canComm(d){return admin||(nome&&d.nome.toLowerCase().trim()===nome.toLowerCase().trim());}
-function canAppr(d){return d.status==="em_aprovacao"&&(admin||(nome&&d.nome.toLowerCase().trim()===nome.toLowerCase().trim()));}
+function canAppr(d){return d.status==="em_aprovacao"&&!admin&&sessao&&d.nome.toLowerCase().trim()===sessao.nome.toLowerCase().trim();}
 
 function chgStatus(d,ns){
   const now=Date.now();
@@ -381,7 +480,13 @@ function chgStatus(d,ns){
 }
 
 // ── RENDER ──────────────────────────────────────────────
-function render(){document.getElementById("app").innerHTML=buildApp();ev();}
+function render(){
+  document.getElementById("app").innerHTML=buildApp();
+  // Restore search focus if needed
+  const _si=document.getElementById('srch-inp');
+  if(_si&&_lastFocusedId==='srch-inp'){_si.focus();_si.setSelectionRange(_si.value.length,_si.value.length);}
+  ev();
+}
 
 function buildApp(){
   if(loading)return`<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:15px;color:#888">Carregando...</div>`;
@@ -395,7 +500,15 @@ function buildApp(){
 <header class="hdr">
   <div style="flex-shrink:0"><div class="hdr-logo">Central de Artes</div><div class="hdr-sub">Germisul · Pasto Brasil</div></div>
   <div class="hdr-r">
-    ${nome?`<span style="font-size:12px;color:#888;white-space:nowrap">Olá, <strong style="color:#F5F5F3">${x(nome.split(" ")[0])}</strong></span>`:""}
+    <div class="hdr-user">
+${sessao
+  ?`<span class="hdr-uname">Olá, <strong>${x(sessao.nome)}</strong></span>
+    ${admin?`<button class="btn-mgmt" onclick="openUserMgmt()">👥 Usuários</button>`:""}
+    <button class="btn-mgmt" onclick="openChangePin()">🔑 PIN</button>
+    <button class="btn-logout" onclick="doLogout()">Sair</button>`
+  :`<button class="btn-login" onclick="openLogin()">Entrar</button>`
+}
+</div>
     <div class="vbtns">
       <button class="vbtn ${view==="lista"?"on":""}" onclick="setView('lista')">≡ Lista</button>
       <button class="vbtn ${view==="kanban"?"on":""}" onclick="setView('kanban')">▦ Kanban</button>
@@ -422,7 +535,7 @@ function buildApp(){
       <option value="real" ${sortBy==="real"?"selected":""}>↑ Prazo real</option>
     </select>
     ${nome?`<button class="btn-meus ${fmeus?"on":""}" id="btn-m">Meus pedidos</button>`:""}
-    <input class="srch" id="srch" placeholder="Buscar nome..." value="${x(fsrc)}"/>
+    <input class="srch" id="srch-inp" placeholder="Buscar nome..." value="${x(fsrc)}" onfocus="_lastFocusedId='srch-inp'" onblur="_lastFocusedId=''"/>
   </div>
 </div>
 ${admin&&envCnt>0?`<div class="banner">⚡ ${envCnt} demanda${envCnt>1?"s":""} aguardando envio para aprovação<button class="bnr-btn" onclick="goEnvAprov()">Ver todas</button></div>`:""}
@@ -430,7 +543,14 @@ ${!nome?`<div class="userbar"><span class="userbar-lbl">Para filtrar seus pedido
 ${view==="lista"?bLista(fil):view==="kanban"?bKanban():view==="cal"?bCal():bCalPost()}
 ${det?bDetail(det):""}
 ${showF?bForm():""}
-${showP?bPin():""}`;
+${showP?bPin():""}
+${showLogin?bLoginModal():""}
+${showVisitorPopup?bVisitorPopup():""}
+${showWelcome?bWelcomePopup():""}
+${showHelp?bHelpModal():""}
+${showUserMgmt&&admin?bUserMgmt():""}
+${showChangePin&&sessao?bChangePinModal():""}
+<button class="help-fab" onclick="openHelp()">❓ Instruções</button>`;
 }
 
 // ── LIST ──────────────────────────────────────────────
@@ -872,7 +992,7 @@ function ev(){
   el("sel-emp")?.addEventListener("change",e=>{femp=e.target.value;render();});
   el("sel-sort")?.addEventListener("change",e=>{sortBy=e.target.value;render();});
   el("btn-m")?.addEventListener("click",()=>{fmeus=!fmeus;render();});
-  el("srch")?.addEventListener("input",e=>{fsrc=e.target.value;render();});
+  el("srch-inp")?.addEventListener("input",e=>{fsrc=e.target.value;render();});
   el("inp-n")?.addEventListener("keydown",e=>{if(e.key==="Enter")setNome();});
   qsa("[data-cid]").forEach(c=>c.addEventListener("click",e=>{
     if(e.target.closest(".astrip")||e.target.closest(".post-chk"))return;
@@ -919,7 +1039,11 @@ window.setView=function(v){view=v;render();};
 window.calPrev=function(){calM--;if(calM<0){calM=11;calY--;}render();};
 window.calNext=function(){calM++;if(calM>11){calM=0;calY++;}render();};
 window.goEnvAprov=function(){fstt="enviar_aprovacao";render();};
-window.openDet=function(id){detailId=id;revisaoMode=false;commText="";render();};
+window.openDet=function(id){
+  if(!sessao){showVisitorPopup=true;render();return;}
+  detailId=id;revisaoMode=false;commText="";render();
+};
+window.closeVisitorPopup=function(){showVisitorPopup=false;render();};
 window.closeDet=function(){detailId=null;revisaoMode=false;commText="";render();};
 window.closeDEvt=function(e){if(e.target.id==="ovl-det")closeDet();};
 window.cancelRev=function(){revisaoMode=false;commText="";render();};
@@ -1014,6 +1138,260 @@ function submitForm(){
   D=[nd,...D];
   if(form.nome&&!nome){nome=form.nome;saveN(form.nome);}
   saveD();showF=false;form=ef();ferr={};render();
+}
+
+// ── AUTH ──────────────────────────────────────────────
+async function loadUsuarios(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/usuarios?select=*&order=nome`,{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}});
+    if(r.ok)usuarios=await r.json();
+  }catch(e){console.warn("Erro ao carregar usuarios",e);}
+}
+
+async function doLogin(nome_sel,pin_inp){
+  const u=usuarios.find(u=>u.nome===nome_sel);
+  if(!u)return"Usuário não encontrado";
+  if(u.pin!==pin_inp)return"PIN incorreto";
+  sessao={id:u.id,nome:u.nome,is_admin:u.is_admin};
+  admin=u.is_admin;
+  nome=u.nome;
+  localStorage.setItem('ca_sessao',JSON.stringify(sessao));
+  return null;
+}
+
+function doLogout(){
+  sessao=null;admin=false;nome='';
+  localStorage.removeItem('ca_sessao');
+  render();
+}
+
+async function resetPin(uid,new_pin){
+  await fetch(`${SB_URL}/rest/v1/usuarios?id=eq.${uid}`,{method:"PATCH",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({pin:new_pin})});
+}
+
+window.doLogout=doLogout;
+window.openLogin=function(){showLogin=true;render();};
+window.closeLogin=function(){showLogin=false;render();};
+window.openUserMgmt=function(){showUserMgmt=true;render();};
+window.closeUserMgmt=function(){showUserMgmt=false;render();};
+window.openChangePin=function(){showChangePin=true;render();};
+window.closeChangePin=function(){showChangePin=false;render();};
+window.openHelp=function(){showHelp=true;render();};
+window.closeHelp=function(){showHelp=false;render();};
+window.closeWelcome=function(noShow){
+  if(noShow)localStorage.setItem('ca_no_welcome','1');
+  showWelcome=false;render();
+};
+
+window.submitLogin=async function(){
+  const sel=document.getElementById('login-sel');
+  const pin=document.getElementById('login-pin');
+  const err=document.getElementById('login-err');
+  if(!sel||!pin)return;
+  const e=await doLogin(sel.value,pin.value);
+  if(e){if(err)err.textContent=e;return;}
+  showLogin=false;render();
+};
+
+window.submitChangePin=async function(){
+  const a=document.getElementById('chpin-atual');
+  const n=document.getElementById('chpin-novo');
+  const c=document.getElementById('chpin-conf');
+  const err=document.getElementById('chpin-err');
+  if(!a||!n||!c)return;
+  const u=usuarios.find(u=>u.nome===sessao.nome);
+  if(!u||u.pin!==a.value){err.textContent="PIN atual incorreto";return;}
+  if(n.value.length<4){err.textContent="PIN deve ter ao menos 4 dígitos";return;}
+  if(n.value!==c.value){err.textContent="Novo PIN não confere";return;}
+  await resetPin(u.id,n.value);
+  await loadUsuarios();
+  showChangePin=false;
+  alert("PIN alterado com sucesso!");
+  render();
+};
+
+window.adminResetPin=async function(uid){
+  if(!confirm("Resetar o PIN deste usuário para 1234?"))return;
+  await resetPin(uid,"1234");
+  await loadUsuarios();
+  render();
+};
+
+// ── MODAL BUILDERS ──────────────────────────────────────
+function bLoginModal(){
+  const opts=usuarios.map(u=>`<option value="${x(u.nome)}">${x(u.nome)}</option>`).join("");
+  return`<div class="login-ovl" onclick="if(event.target.className==='login-ovl')closeLogin()">
+<div class="login-box">
+  <div class="login-title">🔐 Entrar</div>
+  <div class="login-sub">Selecione seu nome e informe seu PIN</div>
+  <select id="login-sel" class="login-sel"><option value="">Selecione seu nome...</option>${opts}</select>
+  <input id="login-pin" class="login-pin" type="password" maxlength="6" placeholder="••••" inputmode="numeric" onkeydown="if(event.key==='Enter')submitLogin()"/>
+  <div id="login-err" class="login-err"></div>
+  <button class="login-btn" onclick="submitLogin()">Entrar</button>
+  <span class="login-close" onclick="closeLogin()">Cancelar</span>
+</div>
+</div>`;
+}
+
+function bVisitorPopup(){
+  return`<div class="vis-ovl" onclick="if(event.target.className==='vis-ovl')closeVisitorPopup()">
+<div class="vis-box">
+  <div class="vis-ico">🔒</div>
+  <div class="vis-title">Acesso restrito</div>
+  <div class="vis-msg">Faça login para visualizar os detalhes e interagir com as demandas.</div>
+  <button class="vis-btn" onclick="closeVisitorPopup();openLogin()">Entrar agora</button>
+  <div class="vis-cancel" onclick="closeVisitorPopup()">Continuar apenas visualizando</div>
+</div>
+</div>`;
+}
+
+function bWelcomePopup(){
+  return`<div class="wlc-ovl">
+<div class="wlc-box">
+  <div class="wlc-head">
+    <div class="wlc-htitle">👋 Bem-vindo à Central de Artes</div>
+    <div class="wlc-hsub">Germisul · Pasto Brasil · Sistema de demandas de design</div>
+  </div>
+  <div class="wlc-body">
+    <div class="wlc-sec">
+      <div class="wlc-stitle">📋 Para começar</div>
+      <div class="wlc-item"><div class="wlc-ico">1️⃣</div><div class="wlc-txt">Clique em <strong>Entrar</strong> no topo da tela e selecione seu nome + PIN</div></div>
+      <div class="wlc-item"><div class="wlc-ico">2️⃣</div><div class="wlc-txt">Sem login, você pode <strong>visualizar as demandas</strong>, mas não pode abrir detalhes</div></div>
+      <div class="wlc-item"><div class="wlc-ico">3️⃣</div><div class="wlc-txt">Seu <strong>PIN padrão é 1234</strong> — você pode alterá-lo após entrar</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">🎨 Como solicitar uma arte</div>
+      <div class="wlc-item"><div class="wlc-ico">✏️</div><div class="wlc-txt">Clique em <strong>+ Nova solicitação</strong> e preencha o formulário com título, tipo de peça, prazo e informações</div></div>
+      <div class="wlc-item"><div class="wlc-ico">📸</div><div class="wlc-txt">Depois de criada, <strong>acompanhe o status</strong> da sua demanda pela lista ou kanban</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">🚦 O que cada status significa</div>
+      <div class="wlc-status-grid">
+        <div class="wlc-sbadge" style="background:#F4F4F0;color:#666">⏳ Aguardando prazo</div>
+        <div class="wlc-sbadge" style="background:#F5F3FF;color:#6B21A8">🚀 À iniciar</div>
+        <div class="wlc-sbadge" style="background:#EFF6FF;color:#1E40AF">🎨 Em produção</div>
+        <div class="wlc-sbadge" style="background:#FFFBEB;color:#92400E">📤 Enviar p/ aprovação</div>
+        <div class="wlc-sbadge" style="background:#ECFEFF;color:#155E75">👀 Em aprovação</div>
+        <div class="wlc-sbadge" style="background:#ECFDF5;color:#065F46">✅ Aprovado</div>
+        <div class="wlc-sbadge" style="background:#FEF2F2;color:#991B1B">🔁 Em revisão</div>
+        <div class="wlc-sbadge" style="background:#F0FDF4;color:#14532D">🏁 Entregue</div>
+      </div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">👁 Modos de visualização</div>
+      <div class="wlc-item"><div class="wlc-ico">📄</div><div class="wlc-txt"><strong>Lista</strong> — visão compacta de todas as demandas com filtros rápidos</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🗂</div><div class="wlc-txt"><strong>Kanban</strong> — colunas por status, ideal para ver o fluxo de produção</div></div>
+      <div class="wlc-item"><div class="wlc-ico">📅</div><div class="wlc-txt"><strong>Calendário de prazos</strong> — visualize os prazos reais das demandas no calendário</div></div>
+      <div class="wlc-item"><div class="wlc-ico">📸</div><div class="wlc-txt"><strong>Calendário de postagens</strong> — veja quando cada peça será postada nas redes sociais</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">✅ Como aprovar uma arte</div>
+      <div class="wlc-item"><div class="wlc-ico">👆</div><div class="wlc-txt">Quando sua demanda chegar em <strong>"Em aprovação"</strong>, você receberá o arquivo para revisar</div></div>
+      <div class="wlc-item"><div class="wlc-ico">✅</div><div class="wlc-txt">Abra o card e clique em <strong>"Aprovar"</strong> se estiver ok, ou <strong>"Solicitar revisão"</strong> com suas observações</div></div>
+    </div>
+  </div>
+  <div class="wlc-footer">
+    <label class="wlc-chk"><input type="checkbox" id="wlc-noshow" onchange="if(this.checked)localStorage.setItem('ca_no_welcome','1');else localStorage.removeItem('ca_no_welcome')"/> Não mostrar novamente</label>
+    <button class="wlc-btn" onclick="closeWelcome(document.getElementById('wlc-noshow')?.checked)">Entendi! 👍</button>
+  </div>
+</div>
+</div>`;
+}
+
+function bHelpModal(){
+  return`<div class="wlc-ovl" onclick="if(event.target.className==='wlc-ovl')closeHelp()">
+<div class="wlc-box">
+  <div class="wlc-head">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div class="wlc-htitle">❓ Instruções de uso</div>
+        <div class="wlc-hsub">Central de Artes · Germisul · Pasto Brasil</div>
+      </div>
+      <button onclick="closeHelp()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1">×</button>
+    </div>
+  </div>
+  <div class="wlc-body">
+    <div class="wlc-sec">
+      <div class="wlc-stitle">🔐 Acesso ao sistema</div>
+      <div class="wlc-item"><div class="wlc-ico">👁</div><div class="wlc-txt"><strong>Visitante (sem login):</strong> Vê a lista de demandas mas não pode abrir detalhes</div></div>
+      <div class="wlc-item"><div class="wlc-ico">👤</div><div class="wlc-txt"><strong>Colaborador (com login):</strong> Abre cards, cria solicitações, aprova suas próprias demandas</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🔑</div><div class="wlc-txt"><strong>Gestão (admin):</strong> Acesso total — gerencia todos os cards, usuários e PINs</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🔢</div><div class="wlc-txt">PIN padrão: <strong>1234</strong>. Troque pelo seu clicando em <strong>🔑 PIN</strong> no topo após entrar</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">📋 Criando uma solicitação</div>
+      <div class="wlc-item"><div class="wlc-ico">1️⃣</div><div class="wlc-txt">Clique em <strong>+ Nova solicitação</strong> no canto superior direito</div></div>
+      <div class="wlc-item"><div class="wlc-ico">2️⃣</div><div class="wlc-txt">Preencha: <strong>título</strong>, <strong>empresa</strong> (Germisul ou Pasto Brasil), <strong>tipo de peça</strong> e <strong>prazo desejado</strong></div></div>
+      <div class="wlc-item"><div class="wlc-ico">3️⃣</div><div class="wlc-txt">Adicione informações, referências e onde será veiculado</div></div>
+      <div class="wlc-item"><div class="wlc-ico">4️⃣</div><div class="wlc-txt">Clique em <strong>Enviar solicitação</strong> — o card aparece automaticamente na lista</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">🚦 Fluxo de status</div>
+      <div class="wlc-item"><div class="wlc-ico">⏳</div><div class="wlc-txt"><strong>Aguardando prazo</strong> — solicitação recebida, aguardando definição de data de início</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🚀</div><div class="wlc-txt"><strong>À iniciar</strong> — data definida, produção prestes a começar</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🎨</div><div class="wlc-txt"><strong>Em produção</strong> — designer trabalhando na peça agora</div></div>
+      <div class="wlc-item"><div class="wlc-ico">📤</div><div class="wlc-txt"><strong>Enviar p/ aprovação</strong> — arte pronta, aguardando envio para o solicitante</div></div>
+      <div class="wlc-item"><div class="wlc-ico">👀</div><div class="wlc-txt"><strong>Em aprovação</strong> — arquivo enviado, aguardando sua resposta</div></div>
+      <div class="wlc-item"><div class="wlc-ico">✅</div><div class="wlc-txt"><strong>Aprovado</strong> — arte aprovada, pronta para uso</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🔁</div><div class="wlc-txt"><strong>Em revisão</strong> — ajustes solicitados, voltou para o designer</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🏁</div><div class="wlc-txt"><strong>Entregue/Finalizado</strong> — arte entregue e processo concluído. O tempo total de desenvolvimento fica registrado!</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">👁 Modos de visualização</div>
+      <div class="wlc-item"><div class="wlc-ico">📄</div><div class="wlc-txt"><strong>Lista</strong> — visão compacta com filtros por status, empresa e busca por nome</div></div>
+      <div class="wlc-item"><div class="wlc-ico">🗂</div><div class="wlc-txt"><strong>Kanban</strong> — colunas por status para visualizar o fluxo completo de produção</div></div>
+      <div class="wlc-item"><div class="wlc-ico">📅</div><div class="wlc-txt"><strong>Cal. Prazos</strong> — calendário com os prazos reais de cada demanda</div></div>
+      <div class="wlc-item"><div class="wlc-ico">📸</div><div class="wlc-txt"><strong>Cal. Postagens</strong> — calendário com os dias programados de postagem nas redes</div></div>
+    </div>
+    <div class="wlc-sec">
+      <div class="wlc-stitle">✅ Aprovando uma arte</div>
+      <div class="wlc-item"><div class="wlc-ico">📩</div><div class="wlc-txt">Quando sua arte chegar em <strong>"Em aprovação"</strong>, você receberá o arquivo por outro canal (WhatsApp, e-mail, etc.)</div></div>
+      <div class="wlc-item"><div class="wlc-ico">👆</div><div class="wlc-txt">Abra o card aqui na Central → clique <strong>"✓ Aprovar"</strong> se estiver ok</div></div>
+      <div class="wlc-item"><div class="wlc-ico">✏️</div><div class="wlc-txt">Ou clique <strong>"Solicitar revisão"</strong> e descreva os ajustes necessários</div></div>
+    </div>
+  </div>
+  <div class="wlc-footer" style="justify-content:flex-end">
+    <button class="wlc-btn" onclick="closeHelp()">Fechar</button>
+  </div>
+</div>
+</div>`;
+}
+
+function bUserMgmt(){
+  return`<div class="umgmt-ovl" onclick="if(event.target.className==='umgmt-ovl')closeUserMgmt()">
+<div class="umgmt-box">
+  <div class="umgmt-head">
+    <span class="umgmt-title">👥 Gerenciar Usuários</span>
+    <button class="umgmt-close" onclick="closeUserMgmt()">×</button>
+  </div>
+  <div class="umgmt-body">
+    ${usuarios.map(u=>`<div class="urow">
+      <span class="uname">${x(u.nome)}</span>
+      <span class="ubdg ${u.is_admin?"adm":"col"}">${u.is_admin?"Admin":"Colaborador"}</span>
+      <button class="ureset" onclick="adminResetPin('${u.id}')">Resetar PIN → 1234</button>
+    </div>`).join("")}
+  </div>
+</div>
+</div>`;
+}
+
+function bChangePinModal(){
+  return`<div class="chpin-ovl" onclick="if(event.target.className==='chpin-ovl')closeChangePin()">
+<div class="chpin-box">
+  <div class="chpin-title">🔑 Alterar meu PIN</div>
+  <div style="font-size:12px;color:#888;margin-bottom:14px">PIN atual:</div>
+  <input id="chpin-atual" class="chpin-inp" type="password" maxlength="6" placeholder="••••" inputmode="numeric"/>
+  <div style="font-size:12px;color:#888;margin-bottom:6px;margin-top:4px">Novo PIN (mín. 4 dígitos):</div>
+  <input id="chpin-novo" class="chpin-inp" type="password" maxlength="6" placeholder="••••" inputmode="numeric"/>
+  <div style="font-size:12px;color:#888;margin-bottom:6px;margin-top:4px">Confirmar novo PIN:</div>
+  <input id="chpin-conf" class="chpin-inp" type="password" maxlength="6" placeholder="••••" inputmode="numeric"/>
+  <div id="chpin-err" class="chpin-err"></div>
+  <div class="chpin-btns">
+    <button class="chpin-cancel" onclick="closeChangePin()">Cancelar</button>
+    <button class="chpin-ok" onclick="submitChangePin()">Salvar</button>
+  </div>
+</div>
+</div>`;
 }
 
 loadAll();
