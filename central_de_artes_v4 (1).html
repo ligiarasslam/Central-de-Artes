@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Central de Artes · Germisul · Pasto Brasil</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Manrope',sans-serif;background:#EFEDE7;min-height:100vh;color:#1A1A1A;font-size:16px;line-height:1.5}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:#EFEDE7}::-webkit-scrollbar-thumb{background:#C8C0B0;border-radius:3px}
+button,input,select,textarea{font-family:'Manrope',sans-serif}
+
+/* ── HEADER ── */
+.hdr{background:#1C1C1C;height:62px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:10px}
+.hdr-logo{font-size:16px;font-weight:800;color:#F5F5F3;letter-spacing:-.3px;white-space:nowrap}
+.hdr-sub{font-size:11px;color:#666;margin-top:-2px}
+.hdr-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn-g{background:transparent;border:1px solid #383838;color:#888;padding:6px 13px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap}
+.btn-g.on{background:#383838;color:#F5F5F3}
+.btn-g:hover{border-color:#666;color:#CCC}
+.btn-sol{background:#F5F5F3;color:#1C1C1C;border:none;padding:7px 16px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn-sol:hover{background:#E5E5E3}
+.vbtns{display:flex;gap:3px}
+.vbtn{background:transparent;border:1px solid #383838;color:#888;padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:.12s;white-space:nowrap}
+.vbtn.on{background:#383838;color:#F5F5F3;border-color:#383838}
+.vbtn:hover:not(.on){border-color:#666;color:#CCC}
+
+/* ── TOOLBAR ── */
+.toolbar{background:#E8E5DE;border-bottom:1px solid #D5D0C6;padding:9px 26px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.pill{background:transparent;border:1px solid #CAC4B8;color:#6A6358;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;transition:.12s;white-space:nowrap}
+.pill.on{background:#1C1C1C;color:#F5F5F3;border-color:#1C1C1C;font-weight:700}
+.pill:hover:not(.on){border-color:#999}
+.tb-r{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sel{border:1px solid #CAC4B8;background:white;border-radius:7px;padding:5px 22px 5px 9px;font-size:12px;color:#3A3530;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;font-weight:500}
+.btn-meus{background:white;border:1px solid #CAC4B8;color:#3A3530;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;transition:.12s}
+.btn-meus.on{background:#1C1C1C;color:#F5F5F3;border-color:#1C1C1C;font-weight:700}
+.srch{border:1px solid #CAC4B8;background:white;border-radius:7px;padding:5px 10px;font-size:12px;color:#3A3530;width:130px}
+.srch:focus{outline:2px solid #555;outline-offset:1px}
+
+/* ── BANNER ── */
+.banner{background:#FFFBEB;border-bottom:2px solid #FCD34D;padding:9px 26px;display:flex;align-items:center;gap:9px;font-size:13px;color:#92400E;font-weight:600}
+.bnr-btn{background:#D97706;color:white;border:none;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer}
+
+/* ── USERBAR ── */
+.userbar{background:#FFFBEE;border:1px solid #EAD060;border-radius:10px;padding:11px 18px;margin:18px 26px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.userbar-lbl{font-size:13px;color:#7A5A00;font-weight:500}
+.uinp{border:1px solid #E0CC90;border-radius:7px;padding:6px 11px;font-size:13px;width:190px}
+.ubtn{background:#1C1C1C;color:#F5F5F3;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer}
+
+/* ── LIST VIEW ── */
+.snote{font-size:12px;color:#AAA;padding:6px 26px 0}
+.cw{padding:16px 26px 48px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+
+/* ── CARD ── */
+.card{background:white;border-radius:12px;border:1px solid #E2DDD4;overflow:visible;cursor:pointer;transition:box-shadow .15s,transform .12s;position:relative}
+.card:hover{box-shadow:0 4px 18px rgba(0,0,0,.09);transform:translateY(-1px)}
+.card.dim{opacity:.6}
+.cinn{border-radius:12px;overflow:hidden}
+.stripe{height:4px}
+.cbody{padding:15px 17px 13px}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:7px}
+.cname{font-size:15px;font-weight:800;color:#1A1A1A;line-height:1.2}
+.cbdgs{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;align-items:center}
+.ebdg{font-size:10px;font-weight:700;letter-spacing:.2px;padding:2px 8px;border-radius:4px}
+.ebdg.g{background:#D8F0C8;color:#185A28}
+.ebdg.p{background:#D2E6F8;color:#0A3D80}
+.fbdg{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#F0EDE4;color:#5A5048}
+.rbdg{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
+.rbdg.li{background:#FCE7F3;color:#9D174D}
+.rbdg.ru{background:#EDE9FE;color:#5B21B6}
+.sbdg{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.ctipo{font-size:14px;font-weight:600;color:#2A2A2A;margin-bottom:7px;line-height:1.3}
+.otags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.otag{font-size:10px;color:#6B6050;background:#F2EDE3;padding:2px 7px;border-radius:4px;font-weight:500}
+.cdts{display:flex;gap:12px;font-size:12px;color:#AAA;margin-bottom:5px;flex-wrap:wrap}
+.cdts strong{color:#555}
+.prl{color:#1A1A1A;font-weight:700}
+.atag{font-size:11px;color:#B91C1C;font-weight:700;background:#FEF2F2;border-radius:4px;padding:2px 7px;display:inline-block;margin-bottom:5px}
+.dtlbl{font-size:12px;color:#059669;font-weight:600;margin-bottom:4px}
+.post-row{display:flex;align-items:center;justify-content:space-between;background:#F0F7FF;border-radius:7px;padding:6px 10px;margin-top:6px;gap:8px}
+.post-lbl{font-size:12px;color:#1550A8;font-weight:600}
+.post-chk{display:flex;align-items:center;gap:5px;font-size:11px;color:#555;font-weight:600;cursor:pointer;user-select:none}
+.post-chk input{width:14px;height:14px;cursor:pointer;accent-color:#1550A8}
+.postado-done{text-decoration:line-through;color:#AAA}
+.iprev{font-size:12px;color:#8A7E70;border-top:1px solid #F0EDE5;padding-top:8px;margin-top:4px;line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:pre-wrap;word-break:break-word}
+.vmais{font-size:11px;color:#666;margin-top:3px;font-weight:600}
+.cftr{margin-top:8px;font-size:11px;color:#C0B8A8;display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid #F5F2ED}
+.aicon{position:absolute;top:-8px;right:-8px;background:#0891B2;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2px solid white;z-index:10;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+
+/* ── ADMIN STRIP ── */
+.astrip{border-top:1px solid #EDE9E0;padding:10px 17px;background:#FAFAF7}
+.amlbl{font-size:10px;font-weight:800;color:#CCC;letter-spacing:.9px;margin-bottom:6px}
+.prow{display:flex;gap:6px;align-items:center;margin-bottom:7px}
+.prow label{font-size:12px;color:#666;flex-shrink:0;width:76px;font-weight:500}
+.prow input{flex:1;border:1px solid #D8D2C5;border-radius:6px;padding:4px 8px;font-size:12px}
+.sbrow{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.qsbtn{font-size:11px;padding:3px 8px;border-radius:5px;border:1px solid #D5CFC5;background:transparent;color:#999;cursor:pointer;font-weight:500;transition:.1s;white-space:nowrap}
+.bdel{font-size:11px;padding:3px 8px;border-radius:5px;border:1px solid #FECACA;background:transparent;color:#EF4444;margin-left:auto;cursor:pointer;font-weight:600}
+
+/* ── KANBAN ── */
+.kanban-w{padding:16px 26px 48px;overflow-x:auto}
+.kboard{display:flex;gap:10px;padding-bottom:10px;min-height:300px}
+.kcol{width:248px;flex-shrink:0}
+.khead{padding:8px 11px;border-radius:9px 9px 0 0;display:flex;align-items:center;justify-content:space-between}
+.khtitle{font-size:11px;font-weight:800;letter-spacing:.1px}
+.khcnt{font-size:11px;font-weight:600;background:rgba(0,0,0,.08);padding:1px 7px;border-radius:20px}
+.kbody{background:#F5F2EC;border-radius:0 0 9px 9px;padding:7px;display:flex;flex-direction:column;gap:6px;min-height:80px}
+.kcard{background:white;border-radius:8px;border:1px solid #E2DDD4;overflow:visible;cursor:pointer;transition:box-shadow .12s;position:relative}
+.kcard:hover{box-shadow:0 3px 10px rgba(0,0,0,.09)}
+.kcinn{border-radius:8px;overflow:hidden}
+.kst{height:3px}
+.kbd{padding:9px 10px 8px}
+.kbdgs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px}
+.kname{font-size:12px;font-weight:800;color:#1A1A1A;margin-bottom:2px;line-height:1.2}
+.ktipo{font-size:11px;font-weight:500;color:#555;margin-bottom:4px;line-height:1.3}
+.kdts{font-size:11px;color:#AAA}
+.kdts strong{color:#666}
+.kpost{font-size:10px;color:#1550A8;font-weight:600;background:#F0F7FF;border-radius:4px;padding:2px 6px;margin-top:4px;display:inline-block}
+.kcol.col-revisao .khead{background:#FFF0F0}
+.kcol.col-enviar_aprovacao .khead{background:#FFFBEB}
+
+/* ── CALENDAR ── */
+.cal-w{padding:16px 26px 48px}
+.cal-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.cal-mo{font-size:17px;font-weight:800;color:#1A1A1A}
+.cal-nb{background:white;border:1px solid #D5CFC5;border-radius:7px;padding:5px 12px;font-size:13px;cursor:pointer;font-weight:600}
+.cal-hint{font-size:12px;color:#AAA;margin-left:4px}
+.cagrid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:#E2DDD4;border:1px solid #E2DDD4;border-radius:11px;overflow:hidden}
+.cahdr{background:#E8E5DE;padding:7px 4px;text-align:center;font-size:11px;font-weight:700;color:#888;letter-spacing:.3px}
+.cacell{background:white;min-height:80px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.cacell.om{background:#FAFAF5}
+.cacell.td{background:#FFFBEE}
+.caday{font-size:12px;font-weight:700;color:#666;margin-bottom:2px}
+.cacell.td .caday{color:#1C1C1C;background:#EAD050;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.cachip{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:white;transition:opacity .1s}
+.cachip:hover{opacity:.82}
+.camore{font-size:10px;color:#888;font-weight:500;cursor:pointer}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:60px 20px;color:#9A8E7A}
+.empty h3{font-size:19px;font-weight:800;color:#5A4E40;margin:10px 0 5px}
+.empty p{font-size:14px}
+
+/* ── OVERLAYS ── */
+.ovl{position:fixed;inset:0;background:rgba(8,8,8,.72);display:flex;align-items:center;justify-content:center;z-index:500;padding:14px}
+.ovlb{position:fixed;inset:0;background:rgba(8,8,8,.72);display:flex;align-items:flex-end;justify-content:center;z-index:500}
+
+/* ── DETAIL MODAL ── */
+.dmodal{background:white;border-radius:17px;width:100%;max-width:900px;max-height:90vh;overflow-y:auto;animation:pop .2s ease}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.dhead{padding:20px 24px 14px;border-bottom:1px solid #EDE9E0;position:sticky;top:0;background:white;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;gap:9px}
+.dname{font-size:19px;font-weight:800;color:#1A1A1A;line-height:1.2}
+.dbdgs{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;align-items:center}
+.bx{background:#F0EDE6;border:none;border-radius:7px;width:32px;height:32px;font-size:21px;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dcols{display:grid;grid-template-columns:1fr 340px;gap:0;min-height:300px}
+.dcol-l{padding:20px 22px 24px;border-right:1px solid #EDE9E0}
+.dcol-r{padding:20px 22px 24px;background:#FAFAF7;border-radius:0 0 17px 0;display:flex;flex-direction:column;gap:0}
+.dsec{margin-bottom:16px}
+.dslbl{font-size:10px;font-weight:800;color:#BBB;letter-spacing:.9px;text-transform:uppercase;margin-bottom:7px}
+.dtipo{font-size:17px;font-weight:700;color:#1A1A1A;line-height:1.3}
+.dmg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dmi{background:#F8F6F1;border-radius:8px;padding:9px 12px}
+.dmil{font-size:10px;font-weight:700;color:#AAA;letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px}
+.dmiv{font-size:13px;font-weight:600;color:#1A1A1A}
+.dmiv.gr{color:#0F6E3A}.dmiv.rd{color:#B91C1C}.dmiv.bl{color:#1550A8}
+.dtgs{display:flex;flex-wrap:wrap;gap:5px}
+.dtg{font-size:12px;font-weight:600;background:#EDE9E0;color:#5A5048;padding:4px 11px;border-radius:20px}
+.dinb{font-size:13px;color:#5A5048;line-height:1.7;white-space:pre-wrap;word-break:break-word;background:#F8F6F1;border-radius:9px;padding:12px 14px}
+.dine{font-size:12px;color:#BBB;font-style:italic}
+.deg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dei{font-size:13px;color:#3A3530}
+.deil{font-size:10px;color:#AAA;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px}
+.ddev{background:#ECFDF5;border-radius:8px;padding:9px 12px;font-size:13px;color:#065F46;font-weight:700}
+.post-det-row{background:#F0F7FF;border-radius:9px;padding:11px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.post-det-info{font-size:13px;color:#1550A8;font-weight:600}
+.post-det-chk{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;font-weight:600;cursor:pointer;user-select:none}
+.post-det-chk input{width:15px;height:15px;cursor:pointer;accent-color:#1550A8}
+
+/* approval box */
+.apbox{background:#ECFEFF;border-radius:10px;padding:13px 15px;margin-bottom:14px}
+.ap-msg{font-size:13px;color:#155E75;line-height:1.6;margin-bottom:11px;font-weight:500}
+.ap-btns{display:flex;gap:8px}
+.btn-aprov{flex:1;padding:10px;background:#059669;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif}
+.btn-aprov:hover{background:#047857}
+.btn-rev{flex:1;padding:10px;background:white;color:#DC2626;border:2px solid #DC2626;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif}
+.btn-rev:hover{background:#FEF2F2}
+.rev-hint{font-size:12px;color:#DC2626;font-weight:700;margin-bottom:7px;padding:8px 11px;background:#FEF2F2;border-radius:7px}
+
+/* gestao inside modal */
+.gsec{border-top:1px solid #EDE9E0;padding-top:14px;margin-top:4px}
+.rrow{display:flex;gap:7px;align-items:center;margin-bottom:9px}
+.rrow label{font-size:12px;color:#666;flex-shrink:0;font-weight:500;min-width:82px}
+.rsel{border:1px solid #D8D2C5;border-radius:7px;padding:6px 22px 6px 10px;font-size:13px;background:white;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;flex:1;font-family:'Manrope',sans-serif}
+.gstbtns{display:flex;flex-wrap:wrap;gap:4px}
+.gstbtn{font-size:11px;padding:4px 9px;border-radius:6px;border:1px solid #D5CFC5;background:transparent;color:#999;cursor:pointer;font-weight:500;font-family:'Manrope',sans-serif;transition:.1s;white-space:nowrap}
+
+/* right col - comments and history */
+.rcol-sec{margin-bottom:16px}
+.cinp{width:100%;border:1px solid #D8D2C5;border-radius:8px;padding:9px 12px;font-size:13px;resize:none;line-height:1.5;background:white}
+.cinp:focus{outline:2px solid #333;outline-offset:1px}
+.cinp.rmode{border-color:#DC2626;border-width:2px}
+.cacts{display:flex;gap:6px;margin-top:7px;justify-content:flex-end}
+.bsend{background:#1C1C1C;color:white;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif}
+.bsend.rv{background:#DC2626}
+.bsend-c{background:transparent;border:1px solid #D8D2C5;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Manrope',sans-serif;color:#666}
+.cth{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;max-height:160px;overflow-y:auto}
+.citem{background:white;border-radius:7px;padding:9px 11px;border:1px solid #EDE9E0}
+.cauthor{font-size:12px;font-weight:700;color:#1A1A1A}
+.cts{font-size:10px;color:#BBB;margin-left:5px;font-weight:400}
+.ctxt{font-size:12px;color:#5A5048;line-height:1.5;margin-top:2px;white-space:pre-wrap;word-break:break-word}
+.htl{display:flex;flex-direction:column;gap:0;max-height:300px;overflow-y:auto;padding-right:2px}
+.hi{display:flex;gap:9px;padding-bottom:11px;position:relative}
+.hi:not(:last-child)::before{content:'';position:absolute;left:9px;top:20px;bottom:0;width:1px;background:#EDE9E0}
+.hdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px;z-index:1}
+.hdot.cr{background:#E8E5DE;color:#888}
+.hdot.st{background:#EFF6FF;color:#2563EB}
+.hdot.pr{background:#ECFDF5;color:#059669}
+.hdot.cm{background:#F5F3FF;color:#7C3AED}
+.hcon{flex:1;padding-top:1px}
+.hwho{font-size:11px;font-weight:700;color:#1A1A1A}
+.hts{font-size:10px;color:#BBB;margin-left:4px}
+.hdesc{font-size:11px;color:#5A5048;margin-top:1px;line-height:1.5}
+.hctxt{font-size:12px;color:#3A3530;margin-top:3px;background:#F8F6F1;border-radius:6px;padding:7px 9px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+
+/* ── FORM MODAL ── */
+.fmodal{background:#FAF9F5;border-radius:20px 20px 0 0;width:100%;max-width:700px;max-height:93vh;overflow-y:auto;padding:26px 28px 48px;animation:slideup .22s ease}
+@keyframes slideup{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.fhd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:9px}
+.ftit{font-size:20px;font-weight:800;color:#1A1A1A}
+.fsub{font-size:13px;color:#7A6E5A;margin-top:3px;font-weight:500}
+.fgr{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.fc2{grid-column:1/-1}
+.fld label{display:block;font-size:11px;font-weight:800;color:#4A3F30;letter-spacing:.5px;margin-bottom:6px;text-transform:uppercase}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid #D8D2C5;border-radius:8px;padding:10px 13px;font-size:14px;background:white;color:#1A1A1A;transition:.12s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #333;outline-offset:1px}
+.fld input.e,.fld select.e{border-color:#EF4444}
+.fld select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;background-color:white;padding-right:28px}
+.fld textarea{resize:vertical;line-height:1.6;font-size:13px}
+.ferr{font-size:11px;color:#EF4444;margin-top:3px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #D8D2C5;background:white;color:#6B6050;cursor:pointer;transition:.12s;font-weight:500}
+.chip.on{border-color:#1A1A1A;background:#1A1A1A;color:#F5F5F3;font-weight:600}
+.chip:hover:not(.on){border-color:#999}
+.fsep{border:none;border-top:1px solid #EDE9E0;margin:11px 0}
+.felbl{font-size:10px;font-weight:800;color:#888;letter-spacing:.6px;text-transform:uppercase;margin-bottom:9px}
+.ffoot{display:flex;gap:10px;margin-top:20px}
+.fcanc{flex:1;padding:12px;border:1px solid #D8D2C5;border-radius:10px;background:white;color:#6B6050;font-size:14px;cursor:pointer;font-weight:500}
+.fsub2{flex:2;padding:12px;border:none;border-radius:10px;background:#1C1C1C;color:#F5F5F3;font-size:14px;font-weight:700;cursor:pointer}
+.fsub2:hover{background:#333}
+
+/* ── PIN MODAL ── */
+.pinbox{background:white;border-radius:16px;padding:32px;width:300px;animation:pop .2s}
+.ptit{font-size:20px;font-weight:800;color:#1A1A1A;margin-bottom:5px}
+.psub{font-size:13px;color:#888;margin-bottom:20px;line-height:1.5;font-weight:500}
+.pinp{width:100%;border:1px solid #DDD;border-radius:8px;padding:12px;font-size:19px;letter-spacing:8px;text-align:center;margin-bottom:7px}
+.pinp.e{border-color:#EF4444}
+.perr{font-size:12px;color:#EF4444;margin-bottom:7px;font-weight:600}
+.pbtns{display:flex;gap:8px;margin-top:12px}
+.pcanc{flex:1;padding:10px;border:1px solid #DDD;border-radius:8px;background:white;font-size:13px;color:#666;cursor:pointer;font-weight:500}
+.pok{flex:1;padding:10px;border:none;border-radius:8px;background:#1C1C1C;color:white;font-size:13px;font-weight:700;cursor:pointer}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .dcols{grid-template-columns:1fr}
+  .dcol-l{border-right:none;border-bottom:1px solid #EDE9E0;padding-bottom:16px}
+  .dcol-r{border-radius:0 0 17px 17px;background:#FAFAF7}
+  .dmg,.deg{grid-template-columns:1fr}
+  .dmodal{max-width:100%}
+}
+@media(max-width:640px){
+  .fgr{grid-template-columns:1fr}.fc2{grid-column:1}
+  .fmodal{padding:22px 18px 44px}
+  .hdr,.toolbar,.cw,.snote,.cal-w,.kanban-w,.banner,.userbar{padding-left:14px;padding-right:14px}
+  .vbtn{padding:4px 8px;font-size:10px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const TIPOS=["Arte para Instagram","Arte para WhatsApp","Arte para folder / panfleto","PDF informativo de produtos","Arte para representante","Papel timbrado","Divulgação de vaga","Assinatura de e-mail","Informativo interno","Edição de vídeo","Sinalização interna","Arte para sacaria","Cotação de fornecedor + arte","Demanda estratégica (planejamento)","Outros"];
+const ONDE=["Instagram Feed","Instagram Stories","WhatsApp (clientes)","WhatsApp (grupos)","E-mail","Uso interno","Impresso / Físico","Outros"];
+const FUNCOES=["Consultor(a)","RH","Diretoria","Gerência","Marketing","Outros"];
+const ST={
+  aguardando_prazo:{l:"Aguardando prazo",   bg:"#F4F4F0",tc:"#666",   col:"#AAA",   stripe:"#CCC"},
+  a_iniciar:       {l:"À iniciar",          bg:"#F5F3FF",tc:"#6B21A8",col:"#7C3AED",stripe:"#7C3AED"},
+  em_producao:     {l:"Em produção",        bg:"#EFF6FF",tc:"#1E40AF",col:"#2563EB",stripe:"#2563EB"},
+  enviar_aprovacao:{l:"Enviar p/ aprovação",bg:"#FFFBEB",tc:"#92400E",col:"#D97706",stripe:"#D97706"},
+  em_aprovacao:    {l:"Em aprovação/aguardando",bg:"#ECFEFF",tc:"#155E75",col:"#0891B2",stripe:"#0891B2"},
+  aprovado:        {l:"Aprovado",           bg:"#ECFDF5",tc:"#065F46",col:"#059669",stripe:"#059669"},
+  revisao:         {l:"Em revisão",         bg:"#FEF2F2",tc:"#991B1B",col:"#DC2626",stripe:"#DC2626"},
+};
+const G_COLS=["aguardando_prazo","a_iniciar","em_producao","enviar_aprovacao","em_aprovacao","aprovado","revisao"];
+const S_COLS=["aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado"];
+const S_PILLS=["all","aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado"];
+const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const DIAS_S=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const PIN="1234"; // ← altere o PIN aqui
+
+// State
+let D=[],nome="",admin=false,showF=false,showP=false,pinV="",pinE=false;
+let fstt="all",femp="all",fmeus=false,fsrc="",sortBy="desejado";
+let view="lista",calY=new Date().getFullYear(),calM=new Date().getMonth();
+let detailId=null,revisaoMode=false,commText="",delId=null,loading=true;
+let form=ef(),ferr={};
+
+function ef(){
+  return{nome:"",funcao:"",empresa:"",tipo:"",tipoO:"",onde:[],ondeO:"",
+    prazoD:"",info:"",eN:"",eC:"",eE:"",eT:"",diaPostagem:""};
+}
+
+// Storage
+async function loadAll(){
+  try{const d=await window.storage.get("artes_v4");if(d)D=JSON.parse(d.value);}catch{}
+  try{const n=await window.storage.get("artes_nome");if(n)nome=n.value;}catch{}
+  loading=false;render();
+}
+async function saveD(){try{await window.storage.set("artes_v4",JSON.stringify(D));}catch{}}
+async function saveN(v){try{await window.storage.set("artes_nome",v);}catch{}}
+
+// Helpers
+function fd(ts){if(!ts)return"—";return new Date(ts).toLocaleDateString("pt-BR");}
+function fdt(ts){if(!ts)return"—";return new Date(ts).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});}
+function fdi(v){if(!v)return"—";const[y,m,d]=v.split("-");return`${d}/${m}/${y}`;}
+function atras(d){if(!d.prazoD||d.status==="aprovado")return false;return new Date(d.prazoD)<new Date();}
+function devt(a,b){if(!a||!b)return null;const diff=b-a,days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000);if(days===0)return`${hrs}h`;if(days===1)return"1 dia";return`${days} dias`;}
+function gid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function x(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function autor(){return nome||(admin?"Gestão":"Anônimo");}
+function hasInsta(d){return d.onde&&(d.onde.includes("Instagram Feed")||d.onde.includes("Instagram Stories"));}
+
+// Status mapping for solicitante view
+function solCol(s){if(s==="revisao")return"aguardando_prazo";if(s==="enviar_aprovacao")return"em_producao";return s;}
+function solBadge(s){if(s==="enviar_aprovacao")return"em_producao";return s;}
+function solFil(s){if(s==="revisao")return"aguardando_prazo";if(s==="enviar_aprovacao")return"em_producao";return s;}
+
+function sortArr(arr){
+  return[...arr].sort((a,b)=>{
+    const da=sortBy==="desejado"?(a.prazoD?new Date(a.prazoD):new Date("9999")):(a.prazoR?new Date(a.prazoR):new Date("9999"));
+    const db=sortBy==="desejado"?(b.prazoD?new Date(b.prazoD):new Date("9999")):(b.prazoR?new Date(b.prazoR):new Date("9999"));
+    return da-db;
+  });
+}
+function matchF(d){
+  if(femp!=="all"&&d.empresa!==femp)return false;
+  if(fmeus&&nome&&d.nome.toLowerCase().trim()!==nome.toLowerCase().trim())return false;
+  if(fsrc&&!d.nome.toLowerCase().includes(fsrc.toLowerCase()))return false;
+  if(fstt!=="all"){const k=admin?d.status:solFil(d.status);if(k!==fstt)return false;}
+  return true;
+}
+function canComm(d){return admin||(nome&&d.nome.toLowerCase().trim()===nome.toLowerCase().trim());}
+function canAppr(d){return d.status==="em_aprovacao"&&(admin||(nome&&d.nome.toLowerCase().trim()===nome.toLowerCase().trim()));}
+
+function chgStatus(d,ns){
+  const now=Date.now();
+  const u={...d,status:ns};
+  if(ns==="em_producao"&&!d.ini)u.ini=now;
+  if(ns==="aprovado")u.aprovadoEm=now;
+  if(!u.historico)u.historico=[];
+  u.historico.push({ts:now,tipo:"status",de:d.status,para:ns,autor:autor()});
+  return u;
+}
+
+// ── RENDER ──────────────────────────────────────────────
+function render(){document.getElementById("app").innerHTML=buildApp();ev();}
+
+function buildApp(){
+  if(loading)return`<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:15px;color:#888">Carregando...</div>`;
+  const envCnt=D.filter(d=>d.status==="enviar_aprovacao").length;
+  const fil=sortArr(D.filter(matchF));
+  const pKeys=admin?["all",...Object.keys(ST)]:S_PILLS;
+  const cnt={all:D.length};
+  pKeys.filter(k=>k!=="all").forEach(k=>{cnt[k]=D.filter(d=>admin?d.status===k:solFil(d.status)===k).length;});
+  const det=detailId?D.find(d=>d.id===detailId):null;
+  return`
+<header class="hdr">
+  <div style="flex-shrink:0"><div class="hdr-logo">Central de Artes</div><div class="hdr-sub">Germisul · Pasto Brasil</div></div>
+  <div class="hdr-r">
+    ${nome?`<span style="font-size:12px;color:#888;white-space:nowrap">Olá, <strong style="color:#F5F5F3">${x(nome.split(" ")[0])}</strong></span>`:""}
+    <div class="vbtns">
+      <button class="vbtn ${view==="lista"?"on":""}" onclick="setView('lista')">≡ Lista</button>
+      <button class="vbtn ${view==="kanban"?"on":""}" onclick="setView('kanban')">▦ Kanban</button>
+      <button class="vbtn ${view==="cal"?"on":""}" onclick="setView('cal')">📅 Prazos</button>
+      <button class="vbtn ${view==="calpost"?"on":""}" onclick="setView('calpost')">📸 Postagens</button>
+    </div>
+    <button class="btn-g ${admin?"on":""}" id="btn-g">${admin?"✓ Gestão":"Gestão"}</button>
+    <button class="btn-sol" id="btn-s">+ Solicitar</button>
+  </div>
+</header>
+<div class="toolbar">
+  ${pKeys.map(k=>{
+    const L=k==="all"?`Todas (${cnt.all})`:`${ST[k]?ST[k].l:k} (${cnt[k]||0})`;
+    return`<button class="pill ${fstt===k?"on":""}" data-fs="${k}">${L}</button>`;
+  }).join("")}
+  <div class="tb-r">
+    <select class="sel" id="sel-emp">
+      <option value="all" ${femp==="all"?"selected":""}>Todas empresas</option>
+      <option value="Germisul" ${femp==="Germisul"?"selected":""}>Germisul</option>
+      <option value="Pasto Brasil" ${femp==="Pasto Brasil"?"selected":""}>Pasto Brasil</option>
+    </select>
+    <select class="sel" id="sel-sort">
+      <option value="desejado" ${sortBy==="desejado"?"selected":""}>↑ Prazo desejado</option>
+      <option value="real" ${sortBy==="real"?"selected":""}>↑ Prazo real</option>
+    </select>
+    ${nome?`<button class="btn-meus ${fmeus?"on":""}" id="btn-m">Meus pedidos</button>`:""}
+    <input class="srch" id="srch" placeholder="Buscar nome..." value="${x(fsrc)}"/>
+  </div>
+</div>
+${admin&&envCnt>0?`<div class="banner">⚡ ${envCnt} demanda${envCnt>1?"s":""} aguardando envio para aprovação<button class="bnr-btn" onclick="goEnvAprov()">Ver todas</button></div>`:""}
+${!nome?`<div class="userbar"><span class="userbar-lbl">Para filtrar seus pedidos, informe seu nome:</span><input id="inp-n" class="uinp" placeholder="Seu nome..."/><button class="ubtn" onclick="setNome()">Confirmar</button></div>`:""}
+${view==="lista"?bLista(fil):view==="kanban"?bKanban():view==="cal"?bCal():bCalPost()}
+${det?bDetail(det):""}
+${showF?bForm():""}
+${showP?bPin():""}`;
+}
+
+// ── LIST ──────────────────────────────────────────────
+function bLista(fil){
+  if(!fil.length)return`<div class="cw"><div class="empty"><div style="font-size:44px">📋</div><h3>${D.length===0?"Nenhuma demanda ainda":"Nenhum resultado"}</h3><p>${D.length===0?"Clique em Solicitar para começar":"Tente ajustar os filtros"}</p></div></div>`;
+  return`<div class="snote">Ordenado por <strong style="color:#555">${sortBy==="desejado"?"prazo desejado":"prazo real"}</strong> · clique no card para ver detalhes</div>
+<div class="cw"><div class="cgrid">${fil.map(d=>bCard(d,false)).join("")}</div></div>`;
+}
+
+// ── CARD ──────────────────────────────────────────────
+function bCard(d,compact){
+  const ds=admin?d.status:solBadge(d.status);
+  const s=ST[ds]||ST.aguardando_prazo;
+  const isG=d.empresa==="Germisul";
+  const sc=isG?"#1A7A38":"#1550A8";
+  const tl=d.tipo==="Outros"?(d.tipoO||"Outros"):(d.tipo||"—");
+  const at=atras(d);
+  const dt=devt(d.ini,d.aprovadoEm);
+  const isAprov=d.status==="em_aprovacao";
+  const showPost=hasInsta(d)&&d.diaPostagem;
+
+  if(compact){
+    return`<div class="kcard" onclick="openDet('${d.id}')">
+${isAprov?`<div class="aicon">!</div>`:""}
+<div class="kcinn"><div class="kst" style="background:${sc}"></div>
+<div class="kbd">
+<div class="kbdgs">
+  <span class="ebdg ${isG?"g":"p"}" style="font-size:10px;padding:1px 6px">${x(d.empresa||"—")}</span>
+  ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}" style="font-size:10px;padding:1px 6px">${x(d.responsavel)}</span>`:""}
+</div>
+<div class="kname">${x(d.nome)}</div>
+<div class="ktipo">${x(tl)}</div>
+${at?`<div style="font-size:10px;color:#B91C1C;font-weight:700;margin-bottom:3px">⚠ Vencido</div>`:""}
+<div class="kdts">📅 <strong>${fdi(d.prazoD)}</strong>${d.prazoR?` · ⚡<strong>${fdi(d.prazoR)}</strong>`:""}</div>
+${showPost?`<div class="kpost ${d.postado?"postado-done":""}">📸 ${fdi(d.diaPostagem)}${d.postado?" · ✓ Postado":""}</div>`:""}
+</div></div></div>`;
+  }
+
+  const tagsH=d.onde&&d.onde.length?`<div class="otags">${d.onde.map(o=>`<span class="otag">${x(o==="Outros"?(d.ondeO||"Outros"):o)}</span>`).join("")}</div>`:"";
+  const hasInfo=d.info&&d.info.trim();
+  return`<div class="card ${d.status==="aprovado"?"dim":""}" data-cid="${d.id}">
+${isAprov?`<div class="aicon">!</div>`:""}
+<div class="cinn"><div class="stripe" style="background:${sc}"></div>
+<div class="cbody">
+<div class="ctop">
+  <div>
+    <div class="cname">${x(d.nome)}</div>
+    <div class="cbdgs">
+      <span class="ebdg ${isG?"g":"p"}">${x(d.empresa||"—")}</span>
+      ${d.funcao?`<span class="fbdg">${x(d.funcao)}</span>`:""}
+      ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}">${x(d.responsavel)}</span>`:""}
+    </div>
+  </div>
+  <span class="sbdg" style="background:${s.bg};color:${s.tc}">${s.l}</span>
+</div>
+<div class="ctipo">${x(tl)}</div>
+${tagsH}
+${at?`<div class="atag">⚠ Prazo vencido</div>`:""}
+<div class="cdts">
+  <span>📅 Desejado: <strong>${fdi(d.prazoD)}</strong></span>
+  ${d.prazoR?`<span>⚡ <span class="prl">Real: ${fdi(d.prazoR)}</span></span>`:""}
+</div>
+${dt?`<div class="dtlbl">✓ ${x(dt)} de desenvolvimento</div>`:""}
+${showPost?`<div class="post-row">
+  <span class="post-lbl ${d.postado?"postado-done":""}">📸 Postagem: ${fdi(d.diaPostagem)}</span>
+  ${admin?`<label class="post-chk" onclick="event.stopPropagation()"><input type="checkbox" ${d.postado?"checked":""} onchange="togglePostado('${d.id}',this.checked)"/> Postado</label>`:""}
+</div>`:""}
+${hasInfo?`<div class="iprev">${x(d.info)}</div><div class="vmais">Ver detalhes →</div>`:""}
+<div class="cftr">
+  <span>Enviado ${fd(d.criado)}</span>
+  ${d.ini?`<span style="color:#9AB8F5">Iniciado ${fd(d.ini)}</span>`:""}
+</div>
+</div></div>
+${admin?bAstrip(d):""}
+</div>`;
+}
+
+function bAstrip(d){
+  return`<div class="astrip" onclick="event.stopPropagation()">
+<div class="amlbl">GESTÃO RÁPIDA</div>
+<div class="prow"><label>Prazo real:</label><input type="date" value="${d.prazoR||""}" onchange="setPR('${d.id}',this.value)"/></div>
+<div class="sbrow">
+${Object.entries(ST).map(([k,v])=>{
+  const act=d.status===k;
+  return`<button class="qsbtn" style="${act?`background:${v.bg};color:${v.tc};border-color:${v.col};font-weight:700`:""}" onclick="setStt('${d.id}','${k}')">${v.l}</button>`;
+}).join("")}
+${delId===d.id?`<span style="font-size:11px;color:#EF4444;display:flex;align-items:center;gap:5px;margin-left:auto">
+  Confirmar?
+  <button onclick="doDel('${d.id}')" style="background:#EF4444;color:white;border:none;border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700">Sim</button>
+  <button onclick="noDel()" style="background:#F5F5F5;border:1px solid #DDD;border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer;font-family:'Manrope',sans-serif">Não</button>
+</span>`:`<button class="bdel" onclick="askDel('${d.id}')">Excluir</button>`}
+</div></div>`;
+}
+
+// ── KANBAN ──────────────────────────────────────────────
+function bKanban(){
+  const cols=admin?G_COLS:S_COLS;
+  const fil=D.filter(matchF);
+  return`<div class="kanban-w"><div class="kboard">${cols.map(ck=>{
+    const s=ST[ck];
+    const colCards=sortArr(fil.filter(d=>(admin?d.status:solCol(d.status))===ck));
+    const spec=ck==="revisao"||ck==="enviar_aprovacao";
+    return`<div class="kcol col-${ck}">
+<div class="khead" style="${spec?"":(`background:${s.bg}`)}">
+  <span class="khtitle" style="color:${s.tc}">${s.l}</span>
+  <span class="khcnt" style="color:${s.tc}">${colCards.length}</span>
+</div>
+<div class="kbody">
+  ${colCards.length===0?`<div style="font-size:12px;color:#CCC;text-align:center;padding:14px 0">Vazio</div>`:""}
+  ${colCards.map(d=>bCard(d,true)).join("")}
+</div>
+</div>`;
+  }).join("")}</div></div>`;
+}
+
+// ── CALENDAR (prazos) ──────────────────────────────────
+function bCal(){
+  return buildCalBase("cal","prazoR","Prazos reais · somente cards com prazo real definido");
+}
+
+// ── CALENDAR (postagens) ──────────────────────────────────
+function bCalPost(){
+  return buildCalBase("calpost","diaPostagem","Dias de postagem · somente cards com dia de postagem definido");
+}
+
+function buildCalBase(mode,field,hint){
+  const fd1=new Date(calY,calM,1),ld=new Date(calY,calM+1,0);
+  const sdow=fd1.getDay(),dim=ld.getDate();
+  const today=new Date();today.setHours(0,0,0,0);
+  const fil=D.filter(matchF);
+  const dm={};
+  fil.forEach(d=>{
+    const val=d[field];
+    if(!val)return;
+    const dt=new Date(val);
+    if(dt.getFullYear()===calY&&dt.getMonth()===calM){
+      const day=dt.getDate();
+      if(!dm[day])dm[day]=[];
+      dm[day].push(d);
+    }
+  });
+  let cells=[];
+  for(let i=0;i<sdow;i++)cells.push({day:new Date(calY,calM,-(sdow-i-1)).getDate(),curr:false});
+  for(let d2=1;d2<=dim;d2++)cells.push({day:d2,curr:true});
+  const rem=(7-cells.length%7)%7;
+  for(let i=1;i<=rem;i++)cells.push({day:i,curr:false});
+  return`<div class="cal-w">
+<div class="cal-nav">
+  <button class="cal-nb" onclick="calPrev()">←</button>
+  <div class="cal-mo">${MESES[calM]} ${calY}</div>
+  <button class="cal-nb" onclick="calNext()">→</button>
+  <span class="cal-hint">${hint}</span>
+</div>
+<div class="cagrid">
+${DIAS_S.map(d=>`<div class="cahdr">${d}</div>`).join("")}
+${cells.map(cell=>{
+  const todayF=cell.curr&&new Date(calY,calM,cell.day).getTime()===today.getTime();
+  const cards=cell.curr?(dm[cell.day]||[]):[];
+  return`<div class="cacell ${!cell.curr?"om":""} ${todayF?"td":""}">
+<div class="caday">${cell.day}</div>
+${cards.slice(0,3).map(d=>{
+  const isG=d.empresa==="Germisul";
+  const tl=d.tipo==="Outros"?(d.tipoO||""):d.tipo||"";
+  const label=`${d.nome.split(" ")[0]} · ${tl.length>12?tl.slice(0,12)+"…":tl}`;
+  return`<div class="cachip" style="background:${isG?"#1A7A38":"#1550A8"}" onclick="openDet('${d.id}')" title="${x(d.nome)} · ${x(tl)}">${x(label)}</div>`;
+}).join("")}
+${cards.length>3?`<div class="camore">+${cards.length-3} mais</div>`:""}
+</div>`;
+}).join("")}
+</div></div>`;
+}
+
+// ── DETAIL MODAL (two-col) ──────────────────────────────
+function bDetail(d){
+  const ds=admin?d.status:solBadge(d.status);
+  const s=ST[ds]||ST.aguardando_prazo;
+  const isG=d.empresa==="Germisul";
+  const tl=d.tipo==="Outros"?(d.tipoO||"Outros"):(d.tipo||"—");
+  const at=atras(d);
+  const dt=devt(d.ini,d.aprovadoEm);
+  const isAss=d.tipo==="Assinatura de e-mail";
+  const infoE=isAss&&(d.eN||d.eE)?`\nColaborador: ${d.eN||"—"}  |  Cargo: ${d.eC||"—"}\nE-mail: ${d.eE||"—"}${d.eT?" | Tel: "+d.eT:""}` :"";
+  const fullInfo=(d.info||"")+infoE;
+  const cc=canComm(d);
+  const ca=canAppr(d);
+  const hist=d.historico||[];
+  const comments=hist.filter(h=>h.tipo==="comentario");
+  const showPost=hasInsta(d)&&d.diaPostagem;
+
+  return`
+<div class="ovl" id="ovl-det" onclick="closeDEvt(event)">
+<div class="dmodal">
+<div class="dhead">
+  <div>
+    <div class="dname">${x(d.nome)}</div>
+    <div class="dbdgs">
+      <span class="ebdg ${isG?"g":"p"}" style="font-size:11px;padding:3px 10px">${x(d.empresa||"—")}</span>
+      ${d.funcao?`<span class="fbdg" style="font-size:11px;padding:3px 10px">${x(d.funcao)}</span>`:""}
+      ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}" style="font-size:11px;padding:3px 10px">${x(d.responsavel)}</span>`:""}
+      <span class="sbdg" style="background:${s.bg};color:${s.tc};font-size:11px">${s.l}</span>
+    </div>
+  </div>
+  <button class="bx" onclick="closeDet()">×</button>
+</div>
+
+<div class="dcols">
+<!-- LEFT COL: info -->
+<div class="dcol-l">
+
+  <div class="dsec">
+    <div class="dslbl">Tipo de peça</div>
+    <div class="dtipo">${x(tl)}</div>
+  </div>
+
+  ${d.onde&&d.onde.length?`<div class="dsec">
+    <div class="dslbl">Onde vai ser publicado</div>
+    <div class="dtgs">${d.onde.map(o=>`<span class="dtg">${x(o==="Outros"?(d.ondeO||"Outros"):o)}</span>`).join("")}</div>
+  </div>`:""}
+
+  ${showPost?`<div class="post-det-row">
+    <span class="post-det-info ${d.postado?"postado-done":""}">📸 Dia de postagem: <strong>${fdi(d.diaPostagem)}</strong>${d.postado?" · ✓ Postado":""}</span>
+    ${admin?`<label class="post-det-chk"><input type="checkbox" ${d.postado?"checked":""} onchange="togglePostado('${d.id}',this.checked)"/> Marcar postado</label>`:""}
+  </div>`:""}
+
+  <div class="dsec">
+    <div class="dslbl">Prazos e datas</div>
+    <div class="dmg">
+      <div class="dmi"><div class="dmil">Prazo desejado</div><div class="dmiv ${at?"rd":""}">${fdi(d.prazoD)}${at?" · ⚠":""}</div></div>
+      <div class="dmi"><div class="dmil">Prazo real</div><div class="dmiv ${d.prazoR?"gr":""}">${d.prazoR?fdi(d.prazoR):"—"}</div></div>
+      <div class="dmi"><div class="dmil">Solicitado em</div><div class="dmiv">${fd(d.criado)}</div></div>
+      <div class="dmi"><div class="dmil">Início da produção</div><div class="dmiv">${d.ini?fd(d.ini):"—"}</div></div>
+    </div>
+  </div>
+
+  ${dt?`<div class="dsec"><div class="ddev">✓ ${x(dt)} de desenvolvimento</div></div>`:""}
+
+  ${isAss&&(d.eN||d.eE)?`<div class="dsec">
+    <div class="dslbl">Dados da assinatura</div>
+    <div class="deg">
+      <div class="dei"><div class="deil">Nome</div>${x(d.eN||"—")}</div>
+      <div class="dei"><div class="deil">Cargo</div>${x(d.eC||"—")}</div>
+      <div class="dei"><div class="deil">E-mail</div>${x(d.eE||"—")}</div>
+      <div class="dei"><div class="deil">Telefone</div>${x(d.eT||"—")}</div>
+    </div>
+  </div>`:""}
+
+  <div class="dsec">
+    <div class="dslbl">Informações e observações</div>
+    ${fullInfo.trim()?`<div class="dinb">${x(fullInfo.trim())}</div>`:`<div class="dine">Nenhuma observação informada.</div>`}
+  </div>
+
+  ${ca?`<div class="dsec">
+    <div class="dslbl">Sua avaliação</div>
+    <div class="apbox">
+      <div class="ap-msg">Esta demanda foi finalizada e está aguardando sua aprovação. Revise e indique se aprova ou precisa de ajustes.</div>
+      ${!revisaoMode?`<div class="ap-btns">
+        <button class="btn-aprov" onclick="doAprovado('${d.id}')">✓ Aprovar</button>
+        <button class="btn-rev" id="btn-rev-t">Solicitar revisão</button>
+      </div>`:`
+      <div class="rev-hint">✏ Quais ajustes você precisa que sejam feitos?</div>
+      <textarea id="rev-ta" class="cinp rmode" rows="3" placeholder="Quais ajustes você precisa que sejam feitos?">${x(commText)}</textarea>
+      <div class="cacts">
+        <button class="bsend-c" onclick="cancelRev()">Cancelar</button>
+        <button class="bsend rv" onclick="doRevisao('${d.id}')">Confirmar revisão</button>
+      </div>`}
+    </div>
+  </div>`:""}
+
+  ${admin?`<div class="dsec gsec">
+    <div class="dslbl">Gestão</div>
+    <div class="rrow">
+      <label>Responsável:</label>
+      <select class="rsel" onchange="setResp('${d.id}',this.value)">
+        <option value="" ${!d.responsavel?"selected":""}>Não definido</option>
+        <option value="Lígia" ${d.responsavel==="Lígia"?"selected":""}>Lígia</option>
+        <option value="Rute" ${d.responsavel==="Rute"?"selected":""}>Rute</option>
+      </select>
+    </div>
+    <div class="prow" style="margin-bottom:11px">
+      <label style="font-size:12px;color:#666;font-weight:500;min-width:76px">Prazo real:</label>
+      <input type="date" value="${d.prazoR||""}" onchange="setPRDet('${d.id}',this.value)" style="flex:1;border:1px solid #D8D2C5;border-radius:7px;padding:7px 10px;font-size:13px;font-family:'Manrope',sans-serif"/>
+    </div>
+    <div class="gstbtns">
+      ${Object.entries(ST).map(([k,v])=>{
+        const act=d.status===k;
+        return`<button class="gstbtn" style="${act?`background:${v.bg};color:${v.tc};border-color:${v.col};font-weight:700`:""}" onclick="setSttDet('${d.id}','${k}')">${v.l}</button>`;
+      }).join("")}
+    </div>
+  </div>`:""}
+
+</div>
+<!-- RIGHT COL: comments + history -->
+<div class="dcol-r">
+
+  ${cc?`<div class="rcol-sec">
+    <div class="dslbl">Comentários</div>
+    ${comments.length>0?`<div class="cth">${comments.map(h=>`
+      <div class="citem">
+        <div class="cauthor">${x(h.autor)}<span class="cts">${fdt(h.ts)}</span></div>
+        <div class="ctxt">${x(h.texto)}</div>
+      </div>`).join("")}</div>`:""}
+    ${!revisaoMode?`<textarea id="comm-ta" class="cinp" rows="3" placeholder="Escreva um comentário...">${x(commText)}</textarea>
+    <div class="cacts"><button class="bsend" onclick="sendComm('${d.id}')">Enviar comentário</button></div>`:""}
+  </div>`:""}
+
+  <div class="rcol-sec" style="flex:1">
+    <div class="dslbl">Histórico</div>
+    <div class="htl">
+      ${hist.length===0?`<div style="font-size:12px;color:#BBB;font-style:italic">Nenhum evento registrado.</div>`:""}
+      ${[...hist].reverse().map(h=>{
+        let dc="cr",desc="",ico="✦";
+        if(h.tipo==="criacao"){dc="cr";desc="Solicitação criada";ico="✦";}
+        else if(h.tipo==="status"){dc="st";desc=`${ST[h.de]?ST[h.de].l:h.de} → <strong>${ST[h.para]?ST[h.para].l:h.para}</strong>`;ico="↓";}
+        else if(h.tipo==="prazo"){dc="pr";desc=`Prazo real: <strong>${fdi(h.valor)}</strong>`;ico="📅";}
+        else if(h.tipo==="comentario"){dc="cm";desc="Comentário";ico="💬";}
+        return`<div class="hi">
+<div class="hdot ${dc}">${ico}</div>
+<div class="hcon">
+  <span class="hwho">${x(h.autor)}</span><span class="hts">${fdt(h.ts)}</span>
+  <div class="hdesc">${desc}</div>
+  ${h.tipo==="comentario"?`<div class="hctxt">${x(h.texto)}</div>`:""}
+</div></div>`;
+      }).join("")}
+    </div>
+  </div>
+
+</div>
+</div><!-- end dcols -->
+</div></div>`;
+}
+
+// ── FORM MODAL ──────────────────────────────────────────
+function bForm(){
+  const isAss=form.tipo==="Assinatura de e-mail";
+  const showDiaPost=form.onde.includes("Instagram Feed")||form.onde.includes("Instagram Stories");
+  return`<div class="ovlb" id="ovl-f" onclick="if(event.target.id==='ovl-f'){showF=false;render();}">
+<div class="fmodal">
+<div class="fhd">
+  <div><div class="ftit">Nova solicitação</div><div class="fsub">Preencha com o máximo de detalhes para agilizar a produção</div></div>
+  <button class="bx" id="bxf">×</button>
+</div>
+<div class="fgr">
+  <div class="fld">
+    <label>Nome *</label>
+    <input id="fn" value="${x(form.nome)}" placeholder="Nome completo" class="${ferr.nome?"e":""}"/>
+    ${ferr.nome?`<div class="ferr">Campo obrigatório</div>`:""}
+  </div>
+  <div class="fld">
+    <label>Função *</label>
+    <select id="ffn" class="${ferr.funcao?"e":""}">
+      <option value="">Selecione...</option>
+      ${FUNCOES.map(f=>`<option value="${x(f)}" ${form.funcao===f?"selected":""}>${x(f)}</option>`).join("")}
+    </select>
+    ${ferr.funcao?`<div class="ferr">Campo obrigatório</div>`:""}
+  </div>
+  <div class="fld">
+    <label>Empresa *</label>
+    <select id="femp" class="${ferr.empresa?"e":""}">
+      <option value="">Selecione...</option>
+      <option ${form.empresa==="Germisul"?"selected":""}>Germisul</option>
+      <option ${form.empresa==="Pasto Brasil"?"selected":""}>Pasto Brasil</option>
+    </select>
+    ${ferr.empresa?`<div class="ferr">Campo obrigatório</div>`:""}
+  </div>
+  <div class="fld">
+    <label>Prazo desejado *</label>
+    <input type="date" id="fpd" value="${x(form.prazoD)}" class="${ferr.prazoD?"e":""}"/>
+    ${ferr.prazoD?`<div class="ferr">Campo obrigatório</div>`:""}
+  </div>
+  <div class="fld fc2">
+    <label>Tipo de peça *</label>
+    <select id="ftipo" class="${ferr.tipo?"e":""}">
+      <option value="">Selecione o tipo...</option>
+      ${TIPOS.map(t=>`<option value="${x(t)}" ${form.tipo===t?"selected":""}>${x(t)}</option>`).join("")}
+    </select>
+    ${ferr.tipo?`<div class="ferr">Campo obrigatório</div>`:""}
+    ${form.tipo==="Outros"?`<input id="ftipo-o" value="${x(form.tipoO)}" placeholder="Descreva o tipo de peça..." style="margin-top:9px;width:100%;border:1px solid #D8D2C5;border-radius:8px;padding:10px 13px;font-size:14px;font-family:'Manrope',sans-serif"/>`:``}
+  </div>
+  ${isAss?`
+  <hr class="fsep fc2"/>
+  <div class="fc2"><div class="felbl">Dados para assinatura de e-mail</div></div>
+  <div class="fld"><label>Nome do colaborador</label><input id="fen" value="${x(form.eN)}" placeholder="Nome completo"/></div>
+  <div class="fld"><label>Cargo</label><input id="fec" value="${x(form.eC)}" placeholder="Ex: Analista de Vendas"/></div>
+  <div class="fld"><label>E-mail</label><input id="fee" value="${x(form.eE)}" placeholder="colaborador@empresa.com.br"/></div>
+  <div class="fld"><label>Telefone (opcional)</label><input id="fet" value="${x(form.eT)}" placeholder="(67) 9 9999-9999"/></div>
+  <hr class="fsep fc2"/>
+  `:""}
+  <div class="fld fc2">
+    <label>Onde vai ser publicado / usado</label>
+    <div class="chips">
+      ${ONDE.map(o=>`<button type="button" class="chip ${form.onde.includes(o)?"on":""}" data-onde="${x(o)}">${x(o)}</button>`).join("")}
+    </div>
+    ${form.onde.includes("Outros")?`<input id="fondo" value="${x(form.ondeO)}" placeholder="Onde será usado?" style="margin-top:9px;width:100%;border:1px solid #D8D2C5;border-radius:8px;padding:10px 13px;font-size:14px;font-family:'Manrope',sans-serif"/>`:``}
+  </div>
+  ${showDiaPost?`<div class="fld fc2" style="background:#F0F7FF;border-radius:9px;padding:12px 14px;border:1px solid #BDD9F5">
+    <label style="color:#1550A8">📸 Dia de postagem no Instagram</label>
+    <input type="date" id="fpost" value="${x(form.diaPostagem)}" style="border:1px solid #BDD9F5"/>
+  </div>`:""}
+  <div class="fld fc2">
+    <label>Informações e observações</label>
+    <textarea id="finfo" rows="5" placeholder="Explique com detalhes o que precisa:
+
+• Sobre o quê é a arte? Produto, assunto, campanha?
+• Qual a mensagem principal que deve aparecer?
+• Há texto pronto, frase ou chamada para ação?
+• Tem referência de estilo ou cor específica?
+• Algum outro detalhe importante?">${x(form.info)}</textarea>
+  </div>
+</div>
+<div class="ffoot">
+  <button class="fcanc" id="bcanc">Cancelar</button>
+  <button class="fsub2" id="bsub2">Enviar solicitação →</button>
+</div>
+</div></div>`;
+}
+
+// ── PIN MODAL ──────────────────────────────────────────
+function bPin(){
+  return`<div class="ovl"><div class="pinbox">
+<div class="ptit">Modo Gestão</div>
+<div class="psub">Digite o PIN para acessar os controles de gestão.</div>
+<input type="password" id="pinp" class="pinp ${pinE?"e":""}" value="${x(pinV)}" placeholder="••••" maxlength="10"/>
+${pinE?`<div class="perr">PIN incorreto.</div>`:""}
+<div class="pbtns">
+  <button class="pcanc" id="pcanc">Cancelar</button>
+  <button class="pok" id="pok">Entrar</button>
+</div>
+</div></div>`;
+}
+
+// ── EVENTS ──────────────────────────────────────────────
+function ev(){
+  el("btn-s")?.addEventListener("click",()=>{form=ef();if(nome)form.nome=nome;ferr={};showF=true;render();});
+  el("btn-g")?.addEventListener("click",()=>{if(admin){admin=false;render();}else{showP=true;pinV="";pinE=false;render();}});
+  qsa("[data-fs]").forEach(b=>b.addEventListener("click",e=>{fstt=e.target.dataset.fs;render();}));
+  el("sel-emp")?.addEventListener("change",e=>{femp=e.target.value;render();});
+  el("sel-sort")?.addEventListener("change",e=>{sortBy=e.target.value;render();});
+  el("btn-m")?.addEventListener("click",()=>{fmeus=!fmeus;render();});
+  el("srch")?.addEventListener("input",e=>{fsrc=e.target.value;render();});
+  el("inp-n")?.addEventListener("keydown",e=>{if(e.key==="Enter")setNome();});
+  qsa("[data-cid]").forEach(c=>c.addEventListener("click",e=>{
+    if(e.target.closest(".astrip")||e.target.closest(".post-chk"))return;
+    openDet(c.dataset.cid);
+  }));
+  el("bxf")?.addEventListener("click",()=>{showF=false;render();});
+  el("bcanc")?.addEventListener("click",()=>{showF=false;render();});
+  el("bsub2")?.addEventListener("click",()=>submitForm());
+  el("fn")?.addEventListener("input",e=>{form.nome=e.target.value;});
+  el("ffn")?.addEventListener("change",e=>{form.funcao=e.target.value;});
+  el("femp")?.addEventListener("change",e=>{form.empresa=e.target.value;});
+  el("fpd")?.addEventListener("change",e=>{form.prazoD=e.target.value;});
+  el("ftipo")?.addEventListener("change",e=>{form.tipo=e.target.value;const i=el("finfo")?.value;render();if(i&&el("finfo"))el("finfo").value=i;});
+  el("ftipo-o")?.addEventListener("input",e=>{form.tipoO=e.target.value;});
+  el("finfo")?.addEventListener("input",e=>{form.info=e.target.value;});
+  el("fondo")?.addEventListener("input",e=>{form.ondeO=e.target.value;});
+  el("fpost")?.addEventListener("change",e=>{form.diaPostagem=e.target.value;});
+  el("fen")?.addEventListener("input",e=>{form.eN=e.target.value;});
+  el("fec")?.addEventListener("input",e=>{form.eC=e.target.value;});
+  el("fee")?.addEventListener("input",e=>{form.eE=e.target.value;});
+  el("fet")?.addEventListener("input",e=>{form.eT=e.target.value;});
+  qsa("[data-onde]").forEach(b=>b.addEventListener("click",e=>{
+    const o=e.target.dataset.onde,i=form.onde.indexOf(o);
+    if(i===-1)form.onde.push(o);else form.onde.splice(i,1);
+    const inf=el("finfo")?.value;render();if(inf&&el("finfo"))el("finfo").value=inf;
+  }));
+  el("pinp")?.addEventListener("input",e=>{pinV=e.target.value;pinE=false;});
+  el("pinp")?.addEventListener("keydown",e=>{if(e.key==="Enter")doPin();});
+  el("pcanc")?.addEventListener("click",()=>{showP=false;render();});
+  el("pok")?.addEventListener("click",()=>doPin());
+  if(showP)setTimeout(()=>el("pinp")?.focus(),50);
+  el("ovl-det")?.addEventListener("click",closeDEvt);
+  el("btn-rev-t")?.addEventListener("click",()=>{revisaoMode=true;commText="";render();setTimeout(()=>el("rev-ta")?.focus(),60);});
+  el("comm-ta")?.addEventListener("input",e=>{commText=e.target.value;});
+  el("rev-ta")?.addEventListener("input",e=>{commText=e.target.value;});
+}
+
+function el(id){return document.getElementById(id);}
+function qsa(s){return document.querySelectorAll(s);}
+
+// ── ACTIONS ──────────────────────────────────────────────
+window.setNome=function(){const v=(el("inp-n")?.value||"").trim();if(v){nome=v;saveN(v);render();}};
+window.setView=function(v){view=v;render();};
+window.calPrev=function(){calM--;if(calM<0){calM=11;calY--;}render();};
+window.calNext=function(){calM++;if(calM>11){calM=0;calY++;}render();};
+window.goEnvAprov=function(){fstt="enviar_aprovacao";render();};
+window.openDet=function(id){detailId=id;revisaoMode=false;commText="";render();};
+window.closeDet=function(){detailId=null;revisaoMode=false;commText="";render();};
+window.closeDEvt=function(e){if(e.target.id==="ovl-det")closeDet();};
+window.cancelRev=function(){revisaoMode=false;commText="";render();};
+
+window.setStt=function(id,ns){
+  D=D.map(d=>d.id===id?chgStatus(d,ns):d);
+  saveD();render();
+};
+window.setSttDet=function(id,ns){
+  D=D.map(d=>d.id===id?chgStatus(d,ns):d);
+  saveD();render();
+};
+window.setPR=function(id,val){
+  if(!val)return;
+  D=D.map(d=>{if(d.id!==id)return d;const u={...d,prazoR:val};if(!u.historico)u.historico=[];u.historico.push({ts:Date.now(),tipo:"prazo",valor:val,autor:autor()});return u;});
+  saveD();
+};
+window.setPRDet=function(id,val){
+  if(!val)return;
+  D=D.map(d=>{if(d.id!==id)return d;const u={...d,prazoR:val};if(!u.historico)u.historico=[];u.historico.push({ts:Date.now(),tipo:"prazo",valor:val,autor:autor()});return u;});
+  saveD();render();
+};
+window.setResp=function(id,val){
+  D=D.map(d=>d.id===id?{...d,responsavel:val}:d);saveD();
+};
+window.togglePostado=function(id,val){
+  D=D.map(d=>d.id===id?{...d,postado:val}:d);saveD();render();
+};
+window.doAprovado=function(id){
+  D=D.map(d=>d.id===id?chgStatus(d,"aprovado"):d);
+  saveD();detailId=null;render();
+};
+window.doRevisao=function(id){
+  const txt=(el("rev-ta")?.value||commText).trim();
+  D=D.map(d=>{
+    if(d.id!==id)return d;
+    let u=chgStatus(d,"revisao");
+    if(txt){if(!u.historico)u.historico=[];u.historico.push({ts:Date.now(),tipo:"comentario",texto:txt,autor:autor()});}
+    return u;
+  });
+  saveD();revisaoMode=false;commText="";detailId=null;render();
+};
+window.sendComm=function(id){
+  const txt=(el("comm-ta")?.value||commText).trim();
+  if(!txt)return;
+  D=D.map(d=>{
+    if(d.id!==id)return d;
+    const u={...d};if(!u.historico)u.historico=[];
+    u.historico.push({ts:Date.now(),tipo:"comentario",texto:txt,autor:autor()});
+    return u;
+  });
+  saveD();commText="";render();
+};
+window.askDel=function(id){delId=id;render();};
+window.noDel=function(){delId=null;render();};
+window.doDel=function(id){D=D.filter(d=>d.id!==id);delId=null;if(detailId===id)detailId=null;saveD();render();};
+
+function doPin(){
+  const v=el("pinp")?.value||pinV;
+  if(v===PIN){admin=true;showP=false;render();}
+  else{pinE=true;pinV="";render();}
+}
+
+function submitForm(){
+  const ta=el("finfo");if(ta)form.info=ta.value;
+  form.nome=(el("fn")?.value||"").trim();
+  form.funcao=el("ffn")?.value||"";
+  form.empresa=el("femp")?.value||"";
+  form.tipo=el("ftipo")?.value||"";
+  form.prazoD=el("fpd")?.value||"";
+  if(el("ftipo-o"))form.tipoO=el("ftipo-o").value;
+  if(el("fpost"))form.diaPostagem=el("fpost").value;
+  if(el("fen"))form.eN=el("fen").value;
+  if(el("fec"))form.eC=el("fec").value;
+  if(el("fee"))form.eE=el("fee").value;
+  if(el("fet"))form.eT=el("fet").value;
+  if(el("fondo"))form.ondeO=el("fondo").value;
+  const e={};
+  if(!form.nome)e.nome=true;
+  if(!form.funcao)e.funcao=true;
+  if(!form.empresa)e.empresa=true;
+  if(!form.tipo)e.tipo=true;
+  if(!form.prazoD)e.prazoD=true;
+  ferr=e;
+  if(Object.keys(e).length){render();return;}
+  const nd={
+    id:gid(),...form,status:"aguardando_prazo",
+    criado:Date.now(),ini:null,aprovadoEm:null,prazoR:null,
+    responsavel:"",postado:false,
+    historico:[{ts:Date.now(),tipo:"criacao",autor:form.nome}]
+  };
+  D=[nd,...D];
+  if(form.nome&&!nome){nome=form.nome;saveN(form.nome);}
+  saveD();showF=false;form=ef();ferr={};render();
+}
+
+loadAll();
+</script>
+</body>
+</html>
