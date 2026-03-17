@@ -291,10 +291,11 @@ const ST={
   em_aprovacao:    {l:"Em aprovação/aguardando",bg:"#ECFEFF",tc:"#155E75",col:"#0891B2",stripe:"#0891B2"},
   aprovado:        {l:"Aprovado",           bg:"#ECFDF5",tc:"#065F46",col:"#059669",stripe:"#059669"},
   revisao:         {l:"Em revisão",         bg:"#FEF2F2",tc:"#991B1B",col:"#DC2626",stripe:"#DC2626"},
+  entregue:        {l:"Entregue/Finalizado",bg:"#F0FDF4",tc:"#14532D",col:"#15803D",stripe:"#15803D"},
 };
-const G_COLS=["aguardando_prazo","a_iniciar","em_producao","enviar_aprovacao","em_aprovacao","aprovado","revisao"];
-const S_COLS=["aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado"];
-const S_PILLS=["all","aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado"];
+const G_COLS=["aguardando_prazo","a_iniciar","em_producao","enviar_aprovacao","em_aprovacao","aprovado","revisao","entregue"];
+const S_COLS=["aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado","entregue"];
+const S_PILLS=["all","aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado","entregue"];
 const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DIAS_S=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const PIN="2610"; // ← altere o PIN aqui
@@ -328,7 +329,7 @@ async function loadAll(){
 async function saveD(){
   if(!D.length)return;
   try{
-    const payload=D.map(d=>({id:d.id,data:d,empresa:d.empresa,status:d.status,criado:d.criado}));
+    const payload=D.map(d=>({id:d.id,data:d}));
     await fetch(SB_URL+"/rest/v1/solicitacoes",{method:"POST",headers:{...SB_H,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify(payload)});
   }catch{}
 }
@@ -339,7 +340,7 @@ async function sbDel(id){try{await fetch(SB_URL+"/rest/v1/solicitacoes?id=eq."+i
 function fd(ts){if(!ts)return"—";return new Date(ts).toLocaleDateString("pt-BR");}
 function fdt(ts){if(!ts)return"—";return new Date(ts).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});}
 function fdi(v){if(!v)return"—";const[y,m,d]=v.split("-");return`${d}/${m}/${y}`;}
-function atras(d){if(!d.prazoD||d.status==="aprovado")return false;return new Date(d.prazoD)<new Date();}
+function atras(d){if(!d.prazoD||d.status==="aprovado"||d.status==="entregue")return false;return new Date(d.prazoD)<new Date();}
 function devt(a,b){if(!a||!b)return null;const diff=b-a,days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000);if(days===0)return`${hrs}h`;if(days===1)return"1 dia";return`${days} dias`;}
 function gid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
 function x(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
@@ -373,6 +374,7 @@ function chgStatus(d,ns){
   const u={...d,status:ns};
   if(ns==="em_producao"&&!d.ini)u.ini=now;
   if(ns==="aprovado")u.aprovadoEm=now;
+  if(ns==="entregue")u.entreguEm=now;
   if(!u.historico)u.historico=[];
   u.historico.push({ts:now,tipo:"status",de:d.status,para:ns,autor:autor()});
   return u;
@@ -446,7 +448,8 @@ function bCard(d,compact){
   const sc=isG?"#1A7A38":"#1550A8";
   const tl=d.tipo==="Outros"?(d.tipoO||"Outros"):(d.tipo||"—");
   const at=atras(d);
-  const dt=devt(d.ini,d.aprovadoEm);
+  const isEntregue=d.status==="entregue";
+  const dt=isEntregue?devt(d.ini,d.entreguEm):devt(d.ini,d.aprovadoEm);
   const isAprov=d.status==="em_aprovacao";
   const showPost=hasInsta(d)&&d.diaPostagem;
 
@@ -469,7 +472,7 @@ ${showPost?`<div class="kpost ${d.postado?"postado-done":""}">📸 ${fdi(d.diaPo
 
   const tagsH=d.onde&&d.onde.length?`<div class="otags">${d.onde.map(o=>`<span class="otag">${x(o==="Outros"?(d.ondeO||"Outros"):o)}</span>`).join("")}</div>`:"";
   const hasInfo=d.info&&d.info.trim();
-  return`<div class="card ${d.status==="aprovado"?"dim":""}" data-cid="${d.id}">
+  return`<div class="card ${(d.status==="aprovado"||d.status==="entregue")?"dim":""}" data-cid="${d.id}">
 ${isAprov?`<div class="aicon">!</div>`:""}
 <div class="cinn"><div class="stripe" style="background:${sc}"></div>
 <div class="cbody">
@@ -491,7 +494,7 @@ ${at?`<div class="atag">⚠ Prazo vencido</div>`:""}
   <span>📅 Desejado: <strong>${fdi(d.prazoD)}</strong></span>
   ${d.prazoR?`<span>⚡ <span class="prl">Real: ${fdi(d.prazoR)}</span></span>`:""}
 </div>
-${dt?`<div class="dtlbl">✓ ${x(dt)} de desenvolvimento</div>`:""}
+${isEntregue&&dt?`<div class="dtlbl" style="background:#DCFCE7;color:#14532D;border-color:#86EFAC;font-weight:700;font-size:12px;padding:5px 10px;border-radius:6px;display:inline-block;margin:4px 0">⏱ Tempo total: ${x(dt)}</div>`:(!isEntregue&&dt?`<div class="dtlbl">✓ ${x(dt)} de desenvolvimento</div>`:"")}
 ${showPost?`<div class="post-row">
   <span class="post-lbl ${d.postado?"postado-done":""}">📸 Postagem: ${fdi(d.diaPostagem)}</span>
   ${admin?`<label class="post-chk" onclick="event.stopPropagation()"><input type="checkbox" ${d.postado?"checked":""} onchange="togglePostado('${d.id}',this.checked)"/> Postado</label>`:""}
@@ -608,7 +611,8 @@ function bDetail(d){
   const isG=d.empresa==="Germisul";
   const tl=d.tipo==="Outros"?(d.tipoO||"Outros"):(d.tipo||"—");
   const at=atras(d);
-  const dt=devt(d.ini,d.aprovadoEm);
+  const isEntregueD=d.status==="entregue";
+  const dt=isEntregueD?devt(d.ini,d.entreguEm):devt(d.ini,d.aprovadoEm);
   const isAss=d.tipo==="Assinatura de e-mail";
   const infoE=isAss&&(d.eN||d.eE)?`\nColaborador: ${d.eN||"—"}  |  Cargo: ${d.eC||"—"}\nE-mail: ${d.eE||"—"}${d.eT?" | Tel: "+d.eT:""}` :"";
   const fullInfo=(d.info||"")+infoE;
@@ -660,10 +664,11 @@ function bDetail(d){
       <div class="dmi"><div class="dmil">Prazo real</div><div class="dmiv ${d.prazoR?"gr":""}">${d.prazoR?fdi(d.prazoR):"—"}</div></div>
       <div class="dmi"><div class="dmil">Solicitado em</div><div class="dmiv">${fd(d.criado)}</div></div>
       <div class="dmi"><div class="dmil">Início da produção</div><div class="dmiv">${d.ini?fd(d.ini):"—"}</div></div>
+      ${isEntregueD&&d.entreguEm?`<div class="dmi"><div class="dmil">Entregue em</div><div class="dmiv gr">${fd(d.entreguEm)}</div></div>`:""}
     </div>
   </div>
 
-  ${dt?`<div class="dsec"><div class="ddev">✓ ${x(dt)} de desenvolvimento</div></div>`:""}
+  ${isEntregueD&&dt?`<div class="dsec"><div class="ddev" style="background:#DCFCE7;color:#14532D;border-color:#86EFAC;font-size:15px;font-weight:800;text-align:center;padding:14px;border-radius:10px">⏱ Tempo total de desenvolvimento: ${x(dt)}</div></div>`:(!isEntregueD&&dt?`<div class="dsec"><div class="ddev">✓ ${x(dt)} de desenvolvimento</div></div>`:"")}
 
   ${isAss&&(d.eN||d.eE)?`<div class="dsec">
     <div class="dslbl">Dados da assinatura</div>
