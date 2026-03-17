@@ -311,14 +311,29 @@ function ef(){
     prazoD:"",info:"",eN:"",eC:"",eE:"",eT:"",diaPostagem:""};
 }
 
+// ── Supabase config (preencha após criar o projeto em supabase.com) ──
+const SB_URL="https://mgnktmidnofxdpqdwtnk.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nbmt0bWlkbm9meGRwcWR3dG5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NjcyODMsImV4cCI6MjA4OTM0MzI4M30.PuVi_9fQXVyFthcrGGxJ8_uRpw3LkZhNqL3RIV4PppM";
+const SB_H={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
+
 // Storage
 async function loadAll(){
-  try{const d=await window.storage.get("artes_v4");if(d)D=JSON.parse(d.value);}catch{}
-  try{const n=await window.storage.get("artes_nome");if(n)nome=n.value;}catch{}
+  try{
+    const r=await fetch(SB_URL+"/rest/v1/solicitacoes?select=data&order=criado.desc",{headers:SB_H});
+    if(r.ok){const rows=await r.json();D=rows.map(row=>row.data);}
+  }catch{}
+  try{const n=localStorage.getItem("artes_nome");if(n)nome=n;}catch{}
   loading=false;render();
 }
-async function saveD(){try{await window.storage.set("artes_v4",JSON.stringify(D));}catch{}}
-async function saveN(v){try{await window.storage.set("artes_nome",v);}catch{}}
+async function saveD(){
+  if(!D.length)return;
+  try{
+    const payload=D.map(d=>({id:d.id,data:d,empresa:d.empresa,status:d.status,criado:d.criado}));
+    await fetch(SB_URL+"/rest/v1/solicitacoes",{method:"POST",headers:{...SB_H,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify(payload)});
+  }catch{}
+}
+async function saveN(v){try{localStorage.setItem("artes_nome",v);}catch{}}
+async function sbDel(id){try{await fetch(SB_URL+"/rest/v1/solicitacoes?id=eq."+id,{method:"DELETE",headers:SB_H});}catch{}}
 
 // Helpers
 function fd(ts){if(!ts)return"—";return new Date(ts).toLocaleDateString("pt-BR");}
@@ -955,7 +970,7 @@ window.sendComm=function(id){
 };
 window.askDel=function(id){delId=id;render();};
 window.noDel=function(){delId=null;render();};
-window.doDel=function(id){D=D.filter(d=>d.id!==id);delId=null;if(detailId===id)detailId=null;saveD();render();};
+window.doDel=function(id){D=D.filter(d=>d.id!==id);delId=null;if(detailId===id)detailId=null;sbDel(id);render();};
 
 function doPin(){
   const v=el("pinp")?.value||pinV;
@@ -988,8 +1003,8 @@ function submitForm(){
   const nd={
     id:gid(),...form,status:"aguardando_prazo",
     criado:Date.now(),ini:null,aprovadoEm:null,prazoR:null,
-    responsavel:"",postado:false,
-    historico:[{ts:Date.now(),tipo:"criacao",autor:form.nome}]
+    responsavel:"",postado:false,fonte:"manual",
+    historico:[{ts:Date.now(),tipo:"criacao",autor:form.nome,fonte:"manual"}]
   };
   D=[nd,...D];
   if(form.nome&&!nome){nome=form.nome;saveN(form.nome);}
