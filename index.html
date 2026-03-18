@@ -397,7 +397,7 @@ let D=[],nome=sessao?.nome||"",admin=sessao?.is_admin||false,showF=false,showP=f
 let fstt="all",femp="all",fmeus=false,fsrc="",sortBy="desejado";
 let view="kanban",calY=new Date().getFullYear(),calM=new Date().getMonth();
 let calMode="mes",calDayDate=new Date();
-let detailId=null,revisaoMode=false,commText="",delId=null,loading=true;
+let detailId=null,revisaoMode=false,commText="",delId=null,loading=true,editId=null;
 let showLogin=false;
 let showUserMgmt=false;
 let showChangePin=false;
@@ -879,7 +879,10 @@ function bDetail(d){
       <span class="sbdg" style="background:${s.bg};color:${s.tc};font-size:11px">${s.l}</span>
     </div>
   </div>
-  <button class="bx" onclick="closeDet()">×</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    ${sessao?.nome==="Lígia"?`<button onclick="openEdit('${d.id}')" style="padding:5px 12px;border-radius:6px;border:1px solid #D1D5DB;background:#F9FAFB;color:#374151;font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600">✏ Editar</button>`:""}
+    <button class="bx" onclick="closeDet()">×</button>
+  </div>
 </div>
 
 <div class="dcols">
@@ -1016,7 +1019,7 @@ function bForm(){
   return`<div class="ovlb" id="ovl-f" onclick="if(event.target.id==='ovl-f'){showF=false;render();}">
 <div class="fmodal">
 <div class="fhd">
-  <div><div class="ftit">Nova solicitação</div><div class="fsub">Preencha com o máximo de detalhes para agilizar a produção</div></div>
+  <div><div class="ftit">${editId?"Editar solicitação":"Nova solicitação"}</div><div class="fsub">${editId?"Altere os campos que precisar e salve":"Preencha com o máximo de detalhes para agilizar a produção"}</div></div>
   <button class="bx" id="bxf">×</button>
 </div>
 <div class="fgr">
@@ -1121,8 +1124,8 @@ function ev(){
     if(e.target.closest(".astrip")||e.target.closest(".post-chk"))return;
     openDet(c.dataset.cid);
   }));
-  el("bxf")?.addEventListener("click",()=>{showF=false;render();});
-  el("bcanc")?.addEventListener("click",()=>{showF=false;render();});
+  el("bxf")?.addEventListener("click",()=>{showF=false;editId=null;form=ef();render();});
+  el("bcanc")?.addEventListener("click",()=>{showF=false;editId=null;form=ef();render();});
   el("bsub2")?.addEventListener("click",()=>submitForm());
   el("fn")?.addEventListener("input",e=>{form.nome=e.target.value;});
   el("ffn")?.addEventListener("change",e=>{form.funcao=e.target.value;});
@@ -1270,6 +1273,15 @@ function submitForm(){
   if(!form.prazoD)e.prazoD=true;
   ferr=e;
   if(Object.keys(e).length){render();return;}
+  if(editId){
+    D=D.map(d=>{
+      if(d.id!==editId)return d;
+      const hist=[...(d.historico||[]),{ts:Date.now(),tipo:"edicao",autor:"Lígia"}];
+      return{...d,...form,historico:hist};
+    });
+    saveD();showF=false;form=ef();ferr={};editId=null;render();
+    return;
+  }
   const nd={
     id:gid(),...form,status:"aguardando_prazo",
     criado:Date.now(),ini:null,aprovadoEm:null,prazoR:null,
@@ -1318,6 +1330,18 @@ window.closeUserMgmt=function(){showUserMgmt=false;render();};
 window.openChangePin=function(){showChangePin=true;render();};
 window.closeChangePin=function(){showChangePin=false;render();};
 window.openHelp=function(){showHelp=true;render();};
+window.openEdit=function(id){
+  const d=D.find(c=>c.id===id);if(!d)return;
+  editId=id;
+  form={
+    nome:d.nome||"",funcao:d.funcao||"",empresa:d.empresa||"",
+    tipo:d.tipo||"",tipoO:d.tipoO||"",prazoD:d.prazoD||"",
+    info:d.info||"",onde:Array.isArray(d.onde)?[...d.onde]:[],
+    ondeO:d.ondeO||"",diaPostagem:d.diaPostagem||"",
+    eN:d.eN||"",eC:d.eC||"",eE:d.eE||"",eT:d.eT||""
+  };
+  ferr={};detailId=null;showF=true;render();
+};
 window.closeHelp=function(){showHelp=false;render();};
 window.closeWelcome=function(noShow){
   if(noShow)localStorage.setItem('ca_no_welcome','1');
