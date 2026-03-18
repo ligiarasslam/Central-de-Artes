@@ -398,6 +398,8 @@ let fstt="all",femp="all",fmeus=false,fsrc="",sortBy="desejado";
 let view="kanban",calY=new Date().getFullYear(),calM=new Date().getMonth();
 let calMode="mes",calDayDate=new Date();
 let detailId=null,revisaoMode=false,commText="",delId=null,loading=true,editId=null;
+let showViewer=false,viewerCardId=null,viewerIdx=0,viewerRevOpt=null,viewerRevText="";
+let linkUrl="",linkLabel="",linkModo="referencia",showLinkForm=false;
 let showLogin=false;
 let showUserMgmt=false;
 let showChangePin=false;
@@ -460,6 +462,18 @@ function venceEm(d){
 }
 function devt(a,b){if(!a||!b)return null;const diff=b-a,days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000);if(days===0)return`${hrs}h`;if(days===1)return"1 dia";return`${days} dias`;}
 function gid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function toEmbedUrl(url){
+  if(!url)return url;
+  // Google Drive file
+  const driveFile=url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+  if(driveFile)return`https://drive.google.com/file/d/${driveFile[1]}/preview`;
+  // Google Drive open?id=
+  const driveOpen=url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+  if(driveOpen)return`https://drive.google.com/file/d/${driveOpen[1]}/preview`;
+  // Canva view
+  if(url.includes("canva.com")&&url.includes("/view"))return url.includes("?embed")?url:url+"?embed";
+  return url;
+}
 function x(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function autor(){return nome||(admin?"Gestão":"Anônimo");}
 function hasInsta(d){return d.onde&&(d.onde.includes("Instagram Feed")||d.onde.includes("Instagram Stories"));}
@@ -562,6 +576,8 @@ ${showLogin?bLoginModal():""}
 ${showVisitorPopup?bVisitorPopup():""}
 ${showWelcome?bWelcomePopup():""}
 ${showHelp?bHelpModal():""}
+${showViewer?bViewer():""}
+
 ${showUserMgmt&&admin?bUserMgmt():""}
 ${showChangePin&&sessao?bChangePinModal():""}
 <button class="help-fab" onclick="openHelp()">❓ Instruções</button>`;
@@ -932,6 +948,42 @@ function bDetail(d){
     ${fullInfo.trim()?`<div class="dinb">${x(fullInfo.trim())}</div>`:`<div class="dine">Nenhuma observação informada.</div>`}
   </div>
 
+  ${sessao?`<div class="dsec">
+    <div class="dslbl" style="display:flex;align-items:center;justify-content:space-between">
+      Links e arquivos
+      <button onclick="toggleLinkForm()" style="font-size:11px;padding:3px 10px;border-radius:6px;border:1px solid #D1D5DB;background:#F9FAFB;color:#374151;cursor:pointer;font-family:'Manrope',sans-serif">+ Adicionar link</button>
+    </div>
+    ${showLinkForm?`<div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:12px;margin-top:8px;display:flex;flex-direction:column;gap:8px">
+      <input id="linp-url" placeholder="Cole o link aqui (Drive, Canva, etc.)" value="${x(linkUrl)}" style="border:1px solid #D1D5DB;border-radius:6px;padding:7px 10px;font-size:13px;font-family:'Manrope',sans-serif;width:100%;box-sizing:border-box"/>
+      <input id="linp-lbl" placeholder="Rótulo (opcional — ex: Arte v1, Referência)" value="${x(linkLabel)}" style="border:1px solid #D1D5DB;border-radius:6px;padding:7px 10px;font-size:13px;font-family:'Manrope',sans-serif;width:100%;box-sizing:border-box"/>
+      <select id="linp-modo" style="border:1px solid #D1D5DB;border-radius:6px;padding:7px 10px;font-size:13px;font-family:'Manrope',sans-serif">
+        <option value="referencia" ${linkModo==="referencia"?"selected":""}>Referência</option>
+        <option value="carrossel" ${linkModo==="carrossel"?"selected":""}>Carrossel</option>
+        <option value="opcoes" ${linkModo==="opcoes"?"selected":""}>Opções para aprovação</option>
+      </select>
+      <div style="display:flex;gap:8px">
+        <button onclick="addLink('${d.id}')" style="flex:1;padding:7px;background:#1A7A38;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600">Salvar link</button>
+        <button onclick="toggleLinkForm()" style="padding:7px 14px;border:1px solid #D1D5DB;background:#fff;border-radius:6px;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif">Cancelar</button>
+      </div>
+    </div>`:""}
+    ${(d.links||[]).length===0&&!showLinkForm?`<div style="font-size:12px;color:#9CA3AF;font-style:italic;margin-top:6px">Nenhum link adicionado ainda.</div>`:""}
+    ${(d.links||[]).length>0?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+      ${(d.links||[]).map((lk,i)=>{
+        const modoLabel=lk.modo==="carrossel"?"🎠 Carrossel":lk.modo==="opcoes"?"✅ Opções para aprovação":"🔗 Referência";
+        return`<div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:7px;padding:8px 10px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${x(lk.label||lk.url)}</div>
+            <div style="font-size:11px;color:#6B7280">${modoLabel} · adicionado por ${x(lk.addedBy)}</div>
+          </div>
+          <button onclick="openViewer('${d.id}',${i})" style="padding:4px 10px;font-size:11px;background:#1A7A38;color:#fff;border:none;border-radius:5px;cursor:pointer;font-family:'Manrope',sans-serif;white-space:nowrap">👁 Ver</button>
+          ${sessao?.nome==="Lígia"||lk.addedBy===sessao?.nome?`<button onclick="removeLink('${d.id}','${lk.id}')" style="padding:4px 8px;font-size:11px;background:#FEF2F2;color:#B91C1C;border:1px solid #FECACA;border-radius:5px;cursor:pointer;font-family:'Manrope',sans-serif">✕</button>`:""}
+        </div>`;
+      }).join("")}
+      ${(d.links||[]).length>1?`<button onclick="openViewer('${d.id}',0)" style="width:100%;padding:8px;background:#F0FDF4;color:#166534;border:1px solid #86EFAC;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif">🎠 Ver todos os ${d.links.length} links</button>`:""}
+    </div>`:""}
+  </div>`:""}
+
+
   ${ca?`<div class="dsec">
     <div class="dslbl">Sua avaliação</div>
     <div class="apbox">
@@ -996,6 +1048,10 @@ function bDetail(d){
         else if(h.tipo==="status"){dc="st";desc=`${ST[h.de]?ST[h.de].l:h.de} → <strong>${ST[h.para]?ST[h.para].l:h.para}</strong>`;ico="↓";}
         else if(h.tipo==="prazo"){dc="pr";desc=`Prazo real: <strong>${fdi(h.valor)}</strong>`;ico="📅";}
         else if(h.tipo==="comentario"){dc="cm";desc="Comentário";ico="💬";}
+        else if(h.tipo==="edicao"){dc="pr";desc="Solicitação editada";ico="✏";}
+        else if(h.tipo==="link_add"){dc="cm";desc=`Link adicionado: <strong>${x(h.label)}</strong>`;ico="🔗";}
+        else if(h.tipo==="aprovacao"){dc="cr";desc=`✓ Aprovado · <strong>${x(h.opcao||"")}</strong>`;ico="✅";}
+        else if(h.tipo==="revisao_opcao"){dc="st";desc=`Revisão solicitada · ${x(h.opcao||"")}`;ico="↩";}
         return`<div class="hi">
 <div class="hdot ${dc}">${ico}</div>
 <div class="hcon">
@@ -1010,6 +1066,58 @@ function bDetail(d){
 </div>
 </div><!-- end dcols -->
 </div></div>`;
+}
+
+// ── VIEWER MODAL ────────────────────────────────────────
+function bViewer(){
+  const d=D.find(c=>c.id===viewerCardId);
+  if(!d||(d.links||[]).length===0)return"";
+  const links=d.links||[];
+  const lk=links[viewerIdx]||links[0];
+  const embedUrl=toEmbedUrl(lk.url);
+  const total=links.length;
+  const isOpcoes=lk.modo==="opcoes";
+  const optLabel=`Opção ${String(viewerIdx+1).padStart(2,"0")}`;
+  const canApprove=sessao&&!admin&&(d.nome.toLowerCase().trim()===sessao.nome.toLowerCase().trim());
+  const canApproveAdmin=admin; // admin also can force-approve
+
+  return`<div style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;flex-direction:column" onclick="if(event.target===this)closeViewer()">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;flex-shrink:0">
+  <div style="color:#fff;font-size:14px;font-weight:700">${x(lk.label||(isOpcoes?optLabel:"Link "+(viewerIdx+1)))}<span style="font-weight:400;color:#9CA3AF;margin-left:8px">${viewerIdx+1} de ${total}</span></div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <a href="${x(lk.url)}" target="_blank" style="color:#9CA3AF;font-size:12px;text-decoration:none;padding:4px 10px;border:1px solid #4B5563;border-radius:5px">↗ Abrir original</a>
+    <button onclick="closeViewer()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 4px">×</button>
+  </div>
+</div>
+
+${isOpcoes?`<div style="display:flex;gap:6px;padding:0 20px 10px;flex-shrink:0;flex-wrap:wrap">
+  ${links.map((lk2,i)=>`<button onclick="viewerGo(${i})" style="padding:5px 14px;border-radius:6px;border:none;background:${i===viewerIdx?"#1A7A38":"#374151"};color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif">${lk2.label||"Opção "+String(i+1).padStart(2,"0")}</button>`).join("")}
+</div>`:`<div style="display:flex;align-items:center;gap:12px;padding:0 20px 10px;flex-shrink:0">
+  <button onclick="viewerGo(${viewerIdx-1})" ${viewerIdx===0?"disabled":""} style="background:${viewerIdx===0?"#1F2937":"#374151"};border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:18px;opacity:${viewerIdx===0?.3:1}">←</button>
+  <div style="flex:1;text-align:center;color:#9CA3AF;font-size:12px">${viewerIdx+1} / ${total}</div>
+  <button onclick="viewerGo(${viewerIdx+1})" ${viewerIdx===total-1?"disabled":""} style="background:${viewerIdx===total-1?"#1F2937":"#374151"};border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:18px;opacity:${viewerIdx===total-1?.3:1}">→</button>
+</div>`}
+
+<div style="flex:1;padding:0 20px;min-height:0">
+  <iframe src="${x(embedUrl)}" style="width:100%;height:100%;border:none;border-radius:10px;background:#fff" allowfullscreen allow="autoplay"></iframe>
+</div>
+
+${isOpcoes&&(canApprove||canApproveAdmin)?`<div style="padding:16px 20px;flex-shrink:0">
+  ${viewerRevOpt===optLabel?`
+    <div style="background:#1F2937;border-radius:10px;padding:14px">
+      <div style="color:#FCD34D;font-size:12px;font-weight:600;margin-bottom:8px">↩ Pedindo revisão da ${optLabel}</div>
+      <textarea id="vrev-ta" rows="3" style="width:100%;box-sizing:border-box;border-radius:7px;border:none;padding:10px;font-size:13px;font-family:'Manrope',sans-serif;resize:none" placeholder="Descreva os ajustes necessários...">${x(viewerRevText)}</textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="cancelViewerRev()" style="padding:8px 16px;border-radius:6px;border:1px solid #4B5563;background:none;color:#D1D5DB;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif">Cancelar</button>
+        <button onclick="sendViewerRev('${d.id}')" style="flex:1;padding:8px;border-radius:6px;border:none;background:#F59E0B;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif">Confirmar pedido de revisão</button>
+      </div>
+    </div>`:`
+    <div style="display:flex;gap:10px">
+      <button onclick="approveOption('${d.id}','${optLabel}')" style="flex:1;padding:12px;border-radius:8px;border:none;background:#1A7A38;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif">✓ Aprovar ${optLabel}</button>
+      <button onclick="startViewerRev('${optLabel}')" style="flex:1;padding:12px;border-radius:8px;border:1px solid #4B5563;background:none;color:#D1D5DB;font-size:14px;cursor:pointer;font-family:'Manrope',sans-serif">↩ Pedir revisão desta opção</button>
+    </div>`}
+</div>`:`<div style="padding:12px 20px;flex-shrink:0"></div>`}
+</div>`;
 }
 
 // ── FORM MODAL ──────────────────────────────────────────
@@ -1154,6 +1262,10 @@ function ev(){
   el("btn-rev-t")?.addEventListener("click",()=>{revisaoMode=true;commText="";render();setTimeout(()=>el("rev-ta")?.focus(),60);});
   el("comm-ta")?.addEventListener("input",e=>{commText=e.target.value;});
   el("rev-ta")?.addEventListener("input",e=>{commText=e.target.value;});
+  el("vrev-ta")?.addEventListener("input",e=>{viewerRevText=e.target.value;});
+  el("linp-url")?.addEventListener("input",e=>{linkUrl=e.target.value;});
+  el("linp-lbl")?.addEventListener("input",e=>{linkLabel=e.target.value;});
+  el("linp-modo")?.addEventListener("change",e=>{linkModo=e.target.value;});
 }
 
 function el(id){return document.getElementById(id);}
@@ -1330,6 +1442,56 @@ window.closeUserMgmt=function(){showUserMgmt=false;render();};
 window.openChangePin=function(){showChangePin=true;render();};
 window.closeChangePin=function(){showChangePin=false;render();};
 window.openHelp=function(){showHelp=true;render();};
+// ── VIEWER ──────────────────────────────────────────────
+window.openViewer=function(id,idx){viewerCardId=id;viewerIdx=idx||0;viewerRevOpt=null;viewerRevText="";showViewer=true;render();};
+window.closeViewer=function(){showViewer=false;render();};
+window.viewerGo=function(i){const d=D.find(c=>c.id===viewerCardId);if(!d)return;const max=(d.links||[]).length-1;viewerIdx=Math.max(0,Math.min(i,max));viewerRevOpt=null;viewerRevText="";render();};
+window.startViewerRev=function(optLabel){viewerRevOpt=optLabel;viewerRevText=`Revisão da ${optLabel}: `;render();};
+window.cancelViewerRev=function(){viewerRevOpt=null;viewerRevText="";render();};
+window.approveOption=function(id,optLabel){
+  D=D.map(d=>{
+    if(d.id!==id)return d;
+    const hist=[...(d.historico||[]),{ts:Date.now(),tipo:"aprovacao",autor:sessao?.nome||autor(),opcao:optLabel}];
+    return{...d,status:"aprovado",aprovadoEm:Date.now(),historico:hist};
+  });
+  saveD();showViewer=false;render();
+};
+window.sendViewerRev=function(id){
+  const ta=document.getElementById("vrev-ta");
+  const txt=(ta?.value||viewerRevText).trim();
+  if(!txt)return;
+  D=D.map(d=>{
+    if(d.id!==id)return d;
+    const hist=[...(d.historico||[]),{ts:Date.now(),tipo:"revisao_opcao",autor:sessao?.nome||autor(),opcao:viewerRevOpt,texto:txt}];
+    return{...d,status:"revisao",historico:hist};
+  });
+  saveD();showViewer=false;viewerRevOpt=null;viewerRevText="";render();
+};
+
+// ── LINKS ────────────────────────────────────────────────
+window.toggleLinkForm=function(){showLinkForm=!showLinkForm;linkUrl="";linkLabel="";linkModo="referencia";render();};
+window.addLink=function(id){
+  const url=(document.getElementById("linp-url")?.value||"").trim();
+  const label=(document.getElementById("linp-lbl")?.value||"").trim();
+  const modo=document.getElementById("linp-modo")?.value||"referencia";
+  if(!url)return;
+  const newLink={id:gid(),url,label,modo,addedBy:sessao?.nome||autor(),addedAt:Date.now()};
+  D=D.map(d=>{
+    if(d.id!==id)return d;
+    const links=[...(d.links||[]),newLink];
+    const hist=[...(d.historico||[]),{ts:Date.now(),tipo:"link_add",autor:sessao?.nome||autor(),label:label||url}];
+    return{...d,links,historico:hist};
+  });
+  saveD();showLinkForm=false;linkUrl="";linkLabel="";linkModo="referencia";render();
+};
+window.removeLink=function(cardId,linkId){
+  D=D.map(d=>{
+    if(d.id!==cardId)return d;
+    return{...d,links:(d.links||[]).filter(lk=>lk.id!==linkId)};
+  });
+  saveD();render();
+};
+
 window.openEdit=function(id){
   const d=D.find(c=>c.id===id);if(!d)return;
   editId=id;
