@@ -1106,9 +1106,11 @@ function bViewer(){
   const embedUrl=toEmbedUrl(lk.url);
   const total=links.length;
   const isOpcoes=lk.modo==="opcoes";
-  const optLabel=`Opção ${String(viewerIdx+1).padStart(2,"0")}`;
+  const isFolder=embedUrl&&embedUrl.includes("embeddedfolderview");
+  const optLabel=isOpcoes?`Opção ${String(viewerIdx+1).padStart(2,"0")}`:lk.label||`Arquivo ${viewerIdx+1}`;
   const canApprove=sessao&&!admin&&(d.nome.toLowerCase().trim()===sessao.nome.toLowerCase().trim());
-  const canApproveAdmin=admin; // admin also can force-approve
+  const canApproveAdmin=admin;
+  const showActions=(canApprove||canApproveAdmin)&&d.status==="em_aprovacao";
 
   return`<div style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;flex-direction:column" onclick="if(event.target===this)closeViewer()">
 <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;flex-shrink:0">
@@ -1127,14 +1129,19 @@ ${isOpcoes?`<div style="display:flex;gap:6px;padding:0 20px 10px;flex-shrink:0;f
   <button onclick="viewerGo(${viewerIdx+1})" ${viewerIdx===total-1?"disabled":""} style="background:${viewerIdx===total-1?"#1F2937":"#374151"};border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:18px;opacity:${viewerIdx===total-1?.3:1}">→</button>
 </div>`}
 
-<div style="flex:1;padding:0 20px;min-height:0">
-  <iframe src="${x(embedUrl)}" style="width:100%;height:100%;border:none;border-radius:10px;background:#fff" allowfullscreen allow="autoplay"></iframe>
+<div style="flex:1;padding:0 20px;min-height:0;display:flex;align-items:center;justify-content:center">
+  ${isFolder?`<div style="text-align:center">
+    <div style="font-size:56px;margin-bottom:16px">📁</div>
+    <div style="color:#fff;font-size:16px;font-weight:700;margin-bottom:8px">${x(lk.label||"Pasta do Drive")}</div>
+    <div style="color:#9CA3AF;font-size:13px;margin-bottom:24px">Pastas não podem ser visualizadas aqui.<br>Abra no Drive para ver e baixar os arquivos.</div>
+    <a href="${x(lk.url)}" target="_blank" style="display:inline-block;background:#1967D2;color:#fff;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none">↗ Abrir pasta no Drive</a>
+  </div>`:`<iframe src="${x(embedUrl)}" style="width:100%;height:100%;border:none;border-radius:10px;background:#fff" allowfullscreen allow="autoplay"></iframe>`}
 </div>
 
-${isOpcoes&&(canApprove||canApproveAdmin)?`<div style="padding:16px 20px;flex-shrink:0">
+${showActions?`<div style="padding:16px 20px;flex-shrink:0">
   ${viewerRevOpt===optLabel?`
     <div style="background:#1F2937;border-radius:10px;padding:14px">
-      <div style="color:#FCD34D;font-size:12px;font-weight:600;margin-bottom:8px">↩ Pedindo revisão da ${optLabel}</div>
+      <div style="color:#FCD34D;font-size:12px;font-weight:600;margin-bottom:8px">↩ Pedindo revisão — ${x(optLabel)}</div>
       <textarea id="vrev-ta" rows="3" style="width:100%;box-sizing:border-box;border-radius:7px;border:none;padding:10px;font-size:13px;font-family:'Manrope',sans-serif;resize:none" placeholder="Descreva os ajustes necessários...">${x(viewerRevText)}</textarea>
       <div style="display:flex;gap:8px;margin-top:8px">
         <button onclick="cancelViewerRev()" style="padding:8px 16px;border-radius:6px;border:1px solid #4B5563;background:none;color:#D1D5DB;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif">Cancelar</button>
@@ -1142,8 +1149,8 @@ ${isOpcoes&&(canApprove||canApproveAdmin)?`<div style="padding:16px 20px;flex-sh
       </div>
     </div>`:`
     <div style="display:flex;gap:10px">
-      <button onclick="approveOption('${d.id}','${optLabel}')" style="flex:1;padding:12px;border-radius:8px;border:none;background:#1A7A38;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif">✓ Aprovar ${optLabel}</button>
-      <button onclick="startViewerRev('${optLabel}')" style="flex:1;padding:12px;border-radius:8px;border:1px solid #4B5563;background:none;color:#D1D5DB;font-size:14px;cursor:pointer;font-family:'Manrope',sans-serif">↩ Pedir revisão desta opção</button>
+      <button onclick="approveOption('${d.id}','${optLabel.replace(/'/g,"\\'")}')" style="flex:1;padding:12px;border-radius:8px;border:none;background:#1A7A38;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif">✓ Aprovar</button>
+      <button onclick="startViewerRev('${optLabel.replace(/'/g,"\\'")}')" style="flex:1;padding:12px;border-radius:8px;border:1px solid #4B5563;background:none;color:#D1D5DB;font-size:14px;cursor:pointer;font-family:'Manrope',sans-serif">↩ Pedir revisão</button>
     </div>`}
 </div>`:`<div style="padding:12px 20px;flex-shrink:0"></div>`}
 </div>`;
