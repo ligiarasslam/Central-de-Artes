@@ -368,7 +368,7 @@ button,input,select,textarea{font-family:'Manrope',sans-serif}
 <body>
 <div id="app"></div>
 <script>
-const TIPOS=["Arte para Instagram","Arte para WhatsApp","Arte para folder / panfleto","PDF informativo de produtos","Arte para representante","Papel timbrado","Divulgação de vaga","Assinatura de e-mail","Informativo interno","Edição de vídeo","Sinalização interna","Arte para sacaria","Cotação de fornecedor + arte","Demanda estratégica (planejamento)","Outros"];
+const TIPOS=["Arte para Instagram","Arte para WhatsApp","Arte para folder / panfleto","PDF informativo de produtos","Arte para representante","Papel timbrado","Divulgação de vaga","Assinatura de e-mail","Informativo interno","Edição de vídeo","Sinalização interna","Cotação de fornecedor + arte","Demanda estratégica (planejamento)","Outros"];
 const ONDE=["Instagram Feed","Instagram Stories","WhatsApp (clientes)","WhatsApp (grupos)","E-mail","Uso interno","Impresso / Físico","Outros"];
 const FUNCOES=["Consultor(a)","RH","Diretoria","Gerência","Marketing","Outros"];
 const ST={
@@ -386,6 +386,7 @@ const S_COLS=["aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprov
 const S_PILLS=["all","aguardando_prazo","a_iniciar","em_producao","em_aprovacao","aprovado","entregue"];
 const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DIAS_S=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const DIAS_FULL=["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
 const PIN="2610"; // ← altere o PIN aqui
 
 // State
@@ -394,7 +395,8 @@ let sessao=JSON.parse(localStorage.getItem('ca_sessao')||'null');
 // sessao = {id, nome, is_admin} or null
 let D=[],nome=sessao?.nome||"",admin=sessao?.is_admin||false,showF=false,showP=false,pinV="",pinE=false;
 let fstt="all",femp="all",fmeus=false,fsrc="",sortBy="desejado";
-let view="lista",calY=new Date().getFullYear(),calM=new Date().getMonth();
+let view="kanban",calY=new Date().getFullYear(),calM=new Date().getMonth();
+let calMode="mes",calDayDate=new Date();
 let detailId=null,revisaoMode=false,commText="",delId=null,loading=true;
 let showLogin=false;
 let showUserMgmt=false;
@@ -439,7 +441,22 @@ async function sbDel(id){try{await fetch(SB_URL+"/rest/v1/solicitacoes?id=eq."+i
 function fd(ts){if(!ts)return"—";return new Date(ts).toLocaleDateString("pt-BR");}
 function fdt(ts){if(!ts)return"—";return new Date(ts).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});}
 function fdi(v){if(!v)return"—";const[y,m,d]=v.split("-");return`${d}/${m}/${y}`;}
-function atras(d){if(!d.prazoD||d.status==="aprovado"||d.status==="entregue")return false;return new Date(d.prazoD)<new Date();}
+function atras(d){
+  const prazo=d.prazoR||d.prazoD;
+  if(!prazo||d.status==="aprovado"||d.status==="entregue")return false;
+  return new Date(prazo)<new Date();
+}
+function venceEm(d){
+  if(d.status==="aprovado"||d.status==="entregue")return null;
+  const prazo=d.prazoR||d.prazoD;
+  if(!prazo)return null;
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const alvo=new Date(prazo);alvo.setHours(0,0,0,0);
+  const diff=Math.round((alvo-hoje)/86400000);
+  if(diff<0)return`Venceu há ${Math.abs(diff)} dia${Math.abs(diff)===1?"":"s"}`;
+  if(diff===0)return"Vence hoje";
+  return`Vence em ${diff} dia${diff===1?"":"s"}`;
+}
 function devt(a,b){if(!a||!b)return null;const diff=b-a,days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000);if(days===0)return`${hrs}h`;if(days===1)return"1 dia";return`${days} dias`;}
 function gid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
 function x(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
@@ -515,8 +532,8 @@ ${sessao
       <button class="vbtn ${view==="cal"?"on":""}" onclick="setView('cal')">📅 Prazos</button>
       <button class="vbtn ${view==="calpost"?"on":""}" onclick="setView('calpost')">📸 Postagens</button>
     </div>
-    <button class="btn-g ${admin?"on":""}" id="btn-g">${admin?"✓ Gestão":"Gestão"}</button>
-    <button class="btn-sol" id="btn-s">+ Solicitar</button>
+    ${!admin?`<button class="btn-g" id="btn-g">Gestão</button>`:""}
+    <button class="btn-sol" id="btn-s">+ Solicitar Nova Demanda</button>
   </div>
 </header>
 <div class="toolbar">
@@ -586,6 +603,7 @@ ${isAprov?`<div class="aicon">!</div>`:""}
 <div class="ktipo">${x(tl)}</div>
 ${at?`<div style="font-size:10px;color:#B91C1C;font-weight:700;margin-bottom:3px">⚠ Vencido</div>`:""}
 <div class="kdts">📅 <strong>${fdi(d.prazoD)}</strong>${d.prazoR?` · ⚡<strong>${fdi(d.prazoR)}</strong>`:""}</div>
+${(()=>{const ve=venceEm(d);return ve?`<div style="font-size:10px;font-weight:600;color:${atras(d)?'#B91C1C':'#6B7280'};margin-top:2px">${ve}</div>`:""})()}
 ${showPost?`<div class="kpost ${d.postado?"postado-done":""}">📸 ${fdi(d.diaPostagem)}${d.postado?" · ✓ Postado":""}</div>`:""}
 </div></div></div>`;
   }
@@ -648,7 +666,7 @@ ${delId===d.id?`<span style="font-size:11px;color:#EF4444;display:flex;align-ite
 
 // ── KANBAN ──────────────────────────────────────────────
 function bKanban(){
-  const cols=admin?G_COLS:S_COLS;
+  const cols=(admin?G_COLS:S_COLS).filter(ck=>D.filter(matchF).some(d=>(admin?d.status:solCol(d.status))===ck));
   const fil=D.filter(matchF);
   return`<div class="kanban-w"><div class="kboard">${cols.map(ck=>{
     const s=ST[ck];
@@ -660,7 +678,6 @@ function bKanban(){
   <span class="khcnt" style="color:${s.tc}">${colCards.length}</span>
 </div>
 <div class="kbody">
-  ${colCards.length===0?`<div style="font-size:12px;color:#CCC;text-align:center;padding:14px 0">Vazio</div>`:""}
   ${colCards.map(d=>bCard(d,true)).join("")}
 </div>
 </div>`;
@@ -678,32 +695,52 @@ function bCalPost(){
 }
 
 function buildCalBase(mode,field,hint){
-  const fd1=new Date(calY,calM,1),ld=new Date(calY,calM+1,0);
-  const sdow=fd1.getDay(),dim=ld.getDate();
   const today=new Date();today.setHours(0,0,0,0);
   const fil=D.filter(matchF);
-  const dm={};
-  fil.forEach(d=>{
-    const val=d[field];
-    if(!val)return;
-    const dt=new Date(val);
-    if(dt.getFullYear()===calY&&dt.getMonth()===calM){
-      const day=dt.getDate();
-      if(!dm[day])dm[day]=[];
-      dm[day].push(d);
-    }
-  });
-  let cells=[];
-  for(let i=0;i<sdow;i++)cells.push({day:new Date(calY,calM,-(sdow-i-1)).getDate(),curr:false});
-  for(let d2=1;d2<=dim;d2++)cells.push({day:d2,curr:true});
-  const rem=(7-cells.length%7)%7;
-  for(let i=1;i<=rem;i++)cells.push({day:i,curr:false});
-  return`<div class="cal-w">
+  // helper: get cards for a specific Date object
+  function cardsForDate(dt){
+    return fil.filter(d=>{
+      const val=d[field];if(!val)return false;
+      const dv=new Date(val);dv.setHours(0,0,0,0);
+      return dv.getTime()===dt.getTime();
+    });
+  }
+  // helper: format date label
+  function fmtDate(dt){return`${DIAS_S[dt.getDay()]} ${dt.getDate()}/${dt.getMonth()+1}`;}
+
+  // ── mode buttons ──
+  const modeBtns=`<div style="display:flex;gap:6px;margin-left:auto">
+    <button onclick="setCalMode('mes')" style="padding:4px 10px;border-radius:6px;border:1px solid #D1D5DB;background:${calMode==='mes'?'#1A7A38':'#fff'};color:${calMode==='mes'?'#fff':'#374151'};font-size:12px;cursor:pointer">Mês</button>
+    <button onclick="setCalMode('semana')" style="padding:4px 10px;border-radius:6px;border:1px solid #D1D5DB;background:${calMode==='semana'?'#1A7A38':'#fff'};color:${calMode==='semana'?'#fff':'#374151'};font-size:12px;cursor:pointer">Semana</button>
+    <button onclick="setCalMode('dia')" style="padding:4px 10px;border-radius:6px;border:1px solid #D1D5DB;background:${calMode==='dia'?'#1A7A38':'#fff'};color:${calMode==='dia'?'#fff':'#374151'};font-size:12px;cursor:pointer">Dia</button>
+  </div>`;
+
+  // ── MONTHLY view ──
+  if(calMode==="mes"){
+    const fd1=new Date(calY,calM,1),ld=new Date(calY,calM+1,0);
+    const sdow=fd1.getDay(),dim=ld.getDate();
+    const dm={};
+    fil.forEach(d=>{
+      const val=d[field];if(!val)return;
+      const dt=new Date(val);
+      if(dt.getFullYear()===calY&&dt.getMonth()===calM){
+        const day=dt.getDate();
+        if(!dm[day])dm[day]=[];
+        dm[day].push(d);
+      }
+    });
+    let cells=[];
+    for(let i=0;i<sdow;i++)cells.push({day:new Date(calY,calM,-(sdow-i-1)).getDate(),curr:false});
+    for(let d2=1;d2<=dim;d2++)cells.push({day:d2,curr:true});
+    const rem=(7-cells.length%7)%7;
+    for(let i=1;i<=rem;i++)cells.push({day:i,curr:false});
+    return`<div class="cal-w">
 <div class="cal-nav">
   <button class="cal-nb" onclick="calPrev()">←</button>
   <div class="cal-mo">${MESES[calM]} ${calY}</div>
   <button class="cal-nb" onclick="calNext()">→</button>
   <span class="cal-hint">${hint}</span>
+  ${modeBtns}
 </div>
 <div class="cagrid">
 ${DIAS_S.map(d=>`<div class="cahdr">${d}</div>`).join("")}
@@ -719,6 +756,88 @@ ${cards.slice(0,3).map(d=>{
   return`<div class="cachip" style="background:${isG?"#1A7A38":"#1550A8"}" onclick="openDet('${d.id}')" title="${x(d.nome)} · ${x(tl)}">${x(label)}</div>`;
 }).join("")}
 ${cards.length>3?`<div class="camore">+${cards.length-3} mais</div>`:""}
+</div>`;
+}).join("")}
+</div></div>`;
+  }
+
+  // ── WEEKLY view ──
+  if(calMode==="semana"){
+    // find sunday of current week
+    const ref=new Date(calDayDate);ref.setHours(0,0,0,0);
+    const dow=ref.getDay();
+    const weekStart=new Date(ref.getTime()-dow*86400000);
+    const days=Array.from({length:7},(_,i)=>new Date(weekStart.getTime()+i*86400000));
+    return`<div class="cal-w">
+<div class="cal-nav">
+  <button class="cal-nb" onclick="calPrev()">←</button>
+  <div class="cal-mo">${fmtDate(days[0])} – ${fmtDate(days[6])} ${days[6].getFullYear()}</div>
+  <button class="cal-nb" onclick="calNext()">→</button>
+  <span class="cal-hint">${hint}</span>
+  ${modeBtns}
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:12px">
+${days.map(dt=>{
+  const isToday=dt.getTime()===today.getTime();
+  const cards=cardsForDate(dt);
+  return`<div style="background:${isToday?'#F0FDF4':'#F9FAFB'};border:1px solid ${isToday?'#86EFAC':'#E5E7EB'};border-radius:8px;min-height:120px;padding:8px">
+<div style="font-weight:700;font-size:13px;color:${isToday?'#166534':'#374151'};margin-bottom:6px;text-align:center">${DIAS_S[dt.getDay()]}<br><span style="font-size:18px">${dt.getDate()}</span></div>
+${cards.length===0?`<div style="font-size:11px;color:#D1D5DB;text-align:center">—</div>`:""}
+${cards.map(d=>{
+  const isG=d.empresa==="Germisul";
+  const tl=d.tipo==="Outros"?(d.tipoO||""):d.tipo||"";
+  const st=admin?d.status:solBadge(d.status);
+  const sv=ST[st]||ST.aguardando_prazo;
+  return`<div onclick="openDet('${d.id}')" style="cursor:pointer;background:#fff;border:1px solid #E5E7EB;border-left:3px solid ${isG?"#1A7A38":"#1550A8"};border-radius:5px;padding:5px 7px;margin-bottom:5px">
+<div style="font-size:11px;font-weight:700;color:#111;margin-bottom:2px">${x(d.nome)}</div>
+<div style="font-size:10px;color:#6B7280;margin-bottom:3px">${x(tl.length>18?tl.slice(0,18)+"…":tl)}</div>
+<span style="font-size:9px;background:${isG?"#DCFCE7":"#DBEAFE"};color:${isG?"#166534":"#1E40AF"};padding:1px 5px;border-radius:4px">${x(d.empresa)}</span>
+<span style="font-size:9px;background:${sv.bg};color:${sv.tc};padding:1px 5px;border-radius:4px;margin-left:3px">${sv.l}</span>
+</div>`;
+}).join("")}
+</div>`;
+}).join("")}
+</div></div>`;
+  }
+
+  // ── DAILY view ──
+  const dayRef=new Date(calDayDate);dayRef.setHours(0,0,0,0);
+  const cards=cardsForDate(dayRef);
+  const isToday=dayRef.getTime()===today.getTime();
+  return`<div class="cal-w">
+<div class="cal-nav">
+  <button class="cal-nb" onclick="calPrev()">←</button>
+  <div class="cal-mo">${DIAS_FULL[dayRef.getDay()]}, ${dayRef.getDate()} de ${MESES[dayRef.getMonth()]} ${dayRef.getFullYear()}${isToday?" · Hoje":""}</div>
+  <button class="cal-nb" onclick="calNext()">→</button>
+  <span class="cal-hint">${hint}</span>
+  ${modeBtns}
+</div>
+<div style="padding:16px;max-width:700px;margin:0 auto">
+${cards.length===0?`<div style="text-align:center;color:#9CA3AF;padding:40px 0;font-size:14px">Nenhuma demanda para este dia.</div>`:""}
+${cards.map(d=>{
+  const isG=d.empresa==="Germisul";
+  const tl=d.tipo==="Outros"?(d.tipoO||"Outros"):d.tipo||"—";
+  const st=admin?d.status:solBadge(d.status);
+  const sv=ST[st]||ST.aguardando_prazo;
+  const ve=venceEm(d);
+  return`<div onclick="openDet('${d.id}')" style="cursor:pointer;background:#fff;border:1px solid #E5E7EB;border-left:4px solid ${isG?"#1A7A38":"#1550A8"};border-radius:8px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+  <div>
+    <div style="font-size:15px;font-weight:700;color:#111;margin-bottom:4px">${x(d.nome)}</div>
+    <div style="font-size:13px;color:#374151;margin-bottom:6px">${x(tl)}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      <span style="font-size:11px;background:${isG?"#DCFCE7":"#DBEAFE"};color:${isG?"#166534":"#1E40AF"};padding:2px 8px;border-radius:5px">${x(d.empresa)}</span>
+      ${d.funcao?`<span style="font-size:11px;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:5px">${x(d.funcao)}</span>`:""}
+      ${(d.onde||[]).map(o=>`<span style="font-size:11px;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:5px">${x(o)}</span>`).join("")}
+    </div>
+  </div>
+  <span style="font-size:11px;background:${sv.bg};color:${sv.tc};padding:3px 10px;border-radius:6px;white-space:nowrap;flex-shrink:0">${sv.l}</span>
+</div>
+${d.prazoD||d.prazoR||ve?`<div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+  ${d.prazoD?`<span style="font-size:11px;color:#6B7280">📅 Desejado: <strong>${fdi(d.prazoD)}</strong></span>`:""}
+  ${d.prazoR?`<span style="font-size:11px;color:#059669">✓ Real: <strong>${fdi(d.prazoR)}</strong></span>`:""}
+  ${ve?`<span style="font-size:11px;color:${atras(d)?'#B91C1C':'#6B7280'};font-weight:600">${ve}</span>`:""}
+</div>`:""}
 </div>`;
 }).join("")}
 </div></div>`;
@@ -992,7 +1111,7 @@ function ev(){
   el("sel-emp")?.addEventListener("change",e=>{femp=e.target.value;render();});
   el("sel-sort")?.addEventListener("change",e=>{sortBy=e.target.value;render();});
   el("btn-m")?.addEventListener("click",()=>{fmeus=!fmeus;render();});
-  el("srch-inp")?.addEventListener("input",e=>{fsrc=e.target.value;render();});
+  el("srch-inp")?.addEventListener("input",e=>{fsrc=e.target.value;_lastFocusedId='srch-inp';render();});
   el("inp-n")?.addEventListener("keydown",e=>{if(e.key==="Enter")setNome();});
   qsa("[data-cid]").forEach(c=>c.addEventListener("click",e=>{
     if(e.target.closest(".astrip")||e.target.closest(".post-chk"))return;
@@ -1036,8 +1155,21 @@ function qsa(s){return document.querySelectorAll(s);}
 // ── ACTIONS ──────────────────────────────────────────────
 window.setNome=function(){const v=(el("inp-n")?.value||"").trim();if(v){nome=v;saveN(v);render();}};
 window.setView=function(v){view=v;render();};
-window.calPrev=function(){calM--;if(calM<0){calM=11;calY--;}render();};
-window.calNext=function(){calM++;if(calM>11){calM=0;calY++;}render();};
+window.setCalMode=function(m){calMode=m;if(m==="dia"||m==="semana"){calDayDate=new Date(calY,calM,1);}render();};
+window.calPrev=function(){
+  if(calMode==="mes"){calM--;if(calM<0){calM=11;calY--;}}
+  else if(calMode==="semana"){calDayDate=new Date(calDayDate.getTime()-7*86400000);}
+  else{calDayDate=new Date(calDayDate.getTime()-86400000);}
+  calY=calDayDate.getFullYear();calM=calDayDate.getMonth();
+  render();
+};
+window.calNext=function(){
+  if(calMode==="mes"){calM++;if(calM>11){calM=0;calY++;}}
+  else if(calMode==="semana"){calDayDate=new Date(calDayDate.getTime()+7*86400000);}
+  else{calDayDate=new Date(calDayDate.getTime()+86400000);}
+  calY=calDayDate.getFullYear();calM=calDayDate.getMonth();
+  render();
+};
 window.goEnvAprov=function(){fstt="enviar_aprovacao";render();};
 window.openDet=function(id){
   if(!sessao){showVisitorPopup=true;render();return;}
@@ -1249,50 +1381,18 @@ function bWelcomePopup(){
   return`<div class="wlc-ovl">
 <div class="wlc-box">
   <div class="wlc-head">
-    <div class="wlc-htitle">👋 Bem-vindo à Central de Artes</div>
+    <div class="wlc-htitle">Bem-vindo(a) à Central de Artes!</div>
     <div class="wlc-hsub">Germisul · Pasto Brasil · Sistema de demandas de design</div>
   </div>
   <div class="wlc-body">
     <div class="wlc-sec">
-      <div class="wlc-stitle">📋 Para começar</div>
-      <div class="wlc-item"><div class="wlc-ico">1️⃣</div><div class="wlc-txt">Clique em <strong>Entrar</strong> no topo da tela e selecione seu nome + PIN</div></div>
-      <div class="wlc-item"><div class="wlc-ico">2️⃣</div><div class="wlc-txt">Sem login, você pode <strong>visualizar as demandas</strong>, mas não pode abrir detalhes</div></div>
-      <div class="wlc-item"><div class="wlc-ico">3️⃣</div><div class="wlc-txt">Seu <strong>PIN padrão é 1234</strong> — você pode alterá-lo após entrar</div></div>
-    </div>
-    <div class="wlc-sec">
-      <div class="wlc-stitle">🎨 Como solicitar uma arte</div>
-      <div class="wlc-item"><div class="wlc-ico">✏️</div><div class="wlc-txt">Clique em <strong>+ Nova solicitação</strong> e preencha o formulário com título, tipo de peça, prazo e informações</div></div>
-      <div class="wlc-item"><div class="wlc-ico">📸</div><div class="wlc-txt">Depois de criada, <strong>acompanhe o status</strong> da sua demanda pela lista ou kanban</div></div>
-    </div>
-    <div class="wlc-sec">
-      <div class="wlc-stitle">🚦 O que cada status significa</div>
-      <div class="wlc-status-grid">
-        <div class="wlc-sbadge" style="background:#F4F4F0;color:#666">⏳ Aguardando prazo</div>
-        <div class="wlc-sbadge" style="background:#F5F3FF;color:#6B21A8">🚀 À iniciar</div>
-        <div class="wlc-sbadge" style="background:#EFF6FF;color:#1E40AF">🎨 Em produção</div>
-        <div class="wlc-sbadge" style="background:#FFFBEB;color:#92400E">📤 Enviar p/ aprovação</div>
-        <div class="wlc-sbadge" style="background:#ECFEFF;color:#155E75">👀 Em aprovação</div>
-        <div class="wlc-sbadge" style="background:#ECFDF5;color:#065F46">✅ Aprovado</div>
-        <div class="wlc-sbadge" style="background:#FEF2F2;color:#991B1B">🔁 Em revisão</div>
-        <div class="wlc-sbadge" style="background:#F0FDF4;color:#14532D">🏁 Entregue</div>
-      </div>
-    </div>
-    <div class="wlc-sec">
-      <div class="wlc-stitle">👁 Modos de visualização</div>
-      <div class="wlc-item"><div class="wlc-ico">📄</div><div class="wlc-txt"><strong>Lista</strong> — visão compacta de todas as demandas com filtros rápidos</div></div>
-      <div class="wlc-item"><div class="wlc-ico">🗂</div><div class="wlc-txt"><strong>Kanban</strong> — colunas por status, ideal para ver o fluxo de produção</div></div>
-      <div class="wlc-item"><div class="wlc-ico">📅</div><div class="wlc-txt"><strong>Calendário de prazos</strong> — visualize os prazos reais das demandas no calendário</div></div>
-      <div class="wlc-item"><div class="wlc-ico">📸</div><div class="wlc-txt"><strong>Calendário de postagens</strong> — veja quando cada peça será postada nas redes sociais</div></div>
-    </div>
-    <div class="wlc-sec">
-      <div class="wlc-stitle">✅ Como aprovar uma arte</div>
-      <div class="wlc-item"><div class="wlc-ico">👆</div><div class="wlc-txt">Quando sua demanda chegar em <strong>"Em aprovação"</strong>, você receberá o arquivo para revisar</div></div>
-      <div class="wlc-item"><div class="wlc-ico">✅</div><div class="wlc-txt">Abra o card e clique em <strong>"Aprovar"</strong> se estiver ok, ou <strong>"Solicitar revisão"</strong> com suas observações</div></div>
+      <p style="font-size:14px;color:#444;line-height:1.7">Faça login clicando em <strong>Entrar</strong> no topo da tela e, em seguida, clique em <strong>+ Solicitar Nova Demanda</strong> para solicitar uma arte ao time de design.</p>
+      <p style="font-size:13px;color:#888;margin-top:10px;line-height:1.6">Para instruções detalhadas sobre como usar o sistema, clique no botão <strong>❓ Instruções</strong> no canto inferior direito.</p>
     </div>
   </div>
   <div class="wlc-footer">
     <label class="wlc-chk"><input type="checkbox" id="wlc-noshow" onchange="if(this.checked)localStorage.setItem('ca_no_welcome','1');else localStorage.removeItem('ca_no_welcome')"/> Não mostrar novamente</label>
-    <button class="wlc-btn" onclick="closeWelcome(document.getElementById('wlc-noshow')?.checked)">Entendi! 👍</button>
+    <button class="wlc-btn" onclick="closeWelcome(document.getElementById('wlc-noshow')?.checked)">Entendi!</button>
   </div>
 </div>
 </div>`;
@@ -1342,12 +1442,6 @@ function bHelpModal(){
       <div class="wlc-item"><div class="wlc-ico">🗂</div><div class="wlc-txt"><strong>Kanban</strong> — colunas por status para visualizar o fluxo completo de produção</div></div>
       <div class="wlc-item"><div class="wlc-ico">📅</div><div class="wlc-txt"><strong>Cal. Prazos</strong> — calendário com os prazos reais de cada demanda</div></div>
       <div class="wlc-item"><div class="wlc-ico">📸</div><div class="wlc-txt"><strong>Cal. Postagens</strong> — calendário com os dias programados de postagem nas redes</div></div>
-    </div>
-    <div class="wlc-sec">
-      <div class="wlc-stitle">✅ Aprovando uma arte</div>
-      <div class="wlc-item"><div class="wlc-ico">📩</div><div class="wlc-txt">Quando sua arte chegar em <strong>"Em aprovação"</strong>, você receberá o arquivo por outro canal (WhatsApp, e-mail, etc.)</div></div>
-      <div class="wlc-item"><div class="wlc-ico">👆</div><div class="wlc-txt">Abra o card aqui na Central → clique <strong>"✓ Aprovar"</strong> se estiver ok</div></div>
-      <div class="wlc-item"><div class="wlc-ico">✏️</div><div class="wlc-txt">Ou clique <strong>"Solicitar revisão"</strong> e descreva os ajustes necessários</div></div>
     </div>
   </div>
   <div class="wlc-footer" style="justify-content:flex-end">
