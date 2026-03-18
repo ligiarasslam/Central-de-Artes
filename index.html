@@ -444,14 +444,15 @@ function fdi(v){if(!v)return"—";const[y,m,d]=v.split("-");return`${d}/${m}/${y
 function atras(d){
   const prazo=d.prazoR||d.prazoD;
   if(!prazo||d.status==="aprovado"||d.status==="entregue")return false;
-  return new Date(prazo)<new Date();
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  return parseLocalDate(prazo)<hoje;
 }
+function parseLocalDate(s){if(!s)return null;const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
 function venceEm(d){
   if(d.status==="aprovado"||d.status==="entregue")return null;
-  const prazo=d.prazoR;
-  if(!prazo)return null;
+  if(!d.prazoR)return null;
   const hoje=new Date();hoje.setHours(0,0,0,0);
-  const alvo=new Date(prazo);alvo.setHours(0,0,0,0);
+  const alvo=parseLocalDate(d.prazoR);
   const diff=Math.round((alvo-hoje)/86400000);
   if(diff<0)return`Venceu há ${Math.abs(diff)} dia${Math.abs(diff)===1?"":"s"}`;
   if(diff===0)return"Vence hoje";
@@ -610,28 +611,28 @@ ${ve?`<div style="font-size:10px;font-weight:600;color:${at?'#B91C1C':'#6B7280'}
 
   const tagsH=d.onde&&d.onde.length?`<div class="otags">${d.onde.map(o=>`<span class="otag">${x(o==="Outros"?(d.ondeO||"Outros"):o)}</span>`).join("")}</div>`:"";
   const hasInfo=d.info&&d.info.trim();
+  const nomeFunc=d.nome+(d.funcao?` · ${d.funcao}`:"");
+  const ve=venceEm(d);
   return`<div class="card ${(d.status==="aprovado"||d.status==="entregue")?"dim":""}" data-cid="${d.id}">
 ${isAprov?`<div class="aicon">!</div>`:""}
 <div class="cinn"><div class="stripe" style="background:${sc}"></div>
 <div class="cbody">
 <div class="ctop">
-  <div>
-    <div class="cname">${x(d.nome)}</div>
-    <div class="cbdgs">
-      <span class="ebdg ${isG?"g":"p"}">${x(d.empresa||"—")}</span>
-      ${d.funcao?`<span class="fbdg">${x(d.funcao)}</span>`:""}
-      ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}">${x(d.responsavel)}</span>`:""}
-    </div>
-  </div>
+  <div class="ctipo" style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px">${x(tl)}</div>
   <span class="sbdg" style="background:${s.bg};color:${s.tc}">${s.l}</span>
 </div>
-<div class="ctipo">${x(tl)}</div>
-${tagsH}
-${at?`<div class="atag">⚠ Prazo vencido</div>`:""}
-<div class="cdts">
-  <span>📅 Desejado: <strong>${fdi(d.prazoD)}</strong></span>
-  ${d.prazoR?`<span>⚡ <span class="prl">Real: ${fdi(d.prazoR)}</span></span>`:""}
+<div class="cbdgs" style="margin-bottom:6px">
+  <span class="ebdg ${isG?"g":"p"}">${x(d.empresa||"—")}</span>
+  <span class="fbdg" style="background:#EEF2FF;color:#3730A3">${x(nomeFunc)}</span>
+  ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}">${x(d.responsavel)}</span>`:""}
 </div>
+${tagsH}
+<div class="cdts" style="margin-top:6px">
+  <span>📅 Solicitado: <strong>${fd(d.criado)}</strong></span>
+  ${d.prazoR?`<span>⚡ <span class="prl">Prazo real: ${fdi(d.prazoR)}</span></span>`:""}
+  ${d.prazoD?`<span style="color:#9CA3AF">Desejado: ${fdi(d.prazoD)}</span>`:""}
+</div>
+${at?`<div class="atag">⚠ Prazo vencido</div>`:ve?`<div style="font-size:11px;font-weight:600;color:#6B7280;margin-top:3px">${ve}</div>`:""}
 ${isEntregue&&dt?`<div class="dtlbl" style="background:#DCFCE7;color:#14532D;border-color:#86EFAC;font-weight:700;font-size:12px;padding:5px 10px;border-radius:6px;display:inline-block;margin:4px 0">⏱ Tempo total: ${x(dt)}</div>`:(!isEntregue&&dt?`<div class="dtlbl">✓ ${x(dt)} de desenvolvimento</div>`:"")}
 ${showPost?`<div class="post-row">
   <span class="post-lbl ${d.postado?"postado-done":""}">📸 Postagem: ${fdi(d.diaPostagem)}</span>
@@ -752,8 +753,9 @@ ${cells.map(cell=>{
 ${cards.slice(0,3).map(d=>{
   const isG=d.empresa==="Germisul";
   const tl=d.tipo==="Outros"?(d.tipoO||""):d.tipo||"";
-  const label=`${d.nome.split(" ")[0]} · ${tl.length>12?tl.slice(0,12)+"…":tl}`;
-  return`<div class="cachip" style="background:${isG?"#1A7A38":"#1550A8"}" onclick="openDet('${d.id}')" title="${x(d.nome)} · ${x(tl)}">${x(label)}</div>`;
+  const nf=d.nome+(d.funcao?` · ${d.funcao}`:"");
+  const label=tl.length>16?tl.slice(0,16)+"…":tl;
+  return`<div class="cachip" style="background:${isG?"#1A7A38":"#1550A8"}" onclick="event.stopPropagation();openDet('${d.id}')" title="${x(nf)} · ${x(tl)}">${x(label)}</div>`;
 }).join("")}
 ${cards.length>3?`<div class="camore">+${cards.length-3} mais</div>`:""}
 </div>`;
@@ -788,11 +790,14 @@ ${cards.map(d=>{
   const tl=d.tipo==="Outros"?(d.tipoO||""):d.tipo||"";
   const st=admin?d.status:solBadge(d.status);
   const sv=ST[st]||ST.aguardando_prazo;
+  const nf=d.nome+(d.funcao?` · ${d.funcao}`:"");
   return`<div onclick="openDet('${d.id}')" style="cursor:pointer;background:#fff;border:1px solid #E5E7EB;border-left:3px solid ${isG?"#1A7A38":"#1550A8"};border-radius:5px;padding:5px 7px;margin-bottom:5px">
-<div style="font-size:11px;font-weight:700;color:#111;margin-bottom:2px">${x(d.nome)}</div>
-<div style="font-size:10px;color:#6B7280;margin-bottom:3px">${x(tl.length>18?tl.slice(0,18)+"…":tl)}</div>
+<div style="font-size:11px;font-weight:700;color:#111;margin-bottom:3px">${x(tl.length>20?tl.slice(0,20)+"…":tl)}</div>
+<span style="font-size:9px;background:#EEF2FF;color:#3730A3;padding:1px 5px;border-radius:4px;display:inline-block;margin-bottom:3px">${x(nf)}</span>
+<div style="display:flex;gap:3px;flex-wrap:wrap">
 <span style="font-size:9px;background:${isG?"#DCFCE7":"#DBEAFE"};color:${isG?"#166534":"#1E40AF"};padding:1px 5px;border-radius:4px">${x(d.empresa)}</span>
-<span style="font-size:9px;background:${sv.bg};color:${sv.tc};padding:1px 5px;border-radius:4px;margin-left:3px">${sv.l}</span>
+<span style="font-size:9px;background:${sv.bg};color:${sv.tc};padding:1px 5px;border-radius:4px">${sv.l}</span>
+</div>
 </div>`;
 }).join("")}
 </div>`;
@@ -820,24 +825,24 @@ ${cards.map(d=>{
   const st=admin?d.status:solBadge(d.status);
   const sv=ST[st]||ST.aguardando_prazo;
   const ve=venceEm(d);
+  const nf=d.nome+(d.funcao?` · ${d.funcao}`:"");
   return`<div onclick="openDet('${d.id}')" style="cursor:pointer;background:#fff;border:1px solid #E5E7EB;border-left:4px solid ${isG?"#1A7A38":"#1550A8"};border-radius:8px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-  <div>
-    <div style="font-size:15px;font-weight:700;color:#111;margin-bottom:4px">${x(d.nome)}</div>
-    <div style="font-size:13px;color:#374151;margin-bottom:6px">${x(tl)}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:5px">
+  <div style="flex:1;min-width:0">
+    <div style="font-size:15px;font-weight:700;color:#111;margin-bottom:5px">${x(tl)}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px">
       <span style="font-size:11px;background:${isG?"#DCFCE7":"#DBEAFE"};color:${isG?"#166534":"#1E40AF"};padding:2px 8px;border-radius:5px">${x(d.empresa)}</span>
-      ${d.funcao?`<span style="font-size:11px;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:5px">${x(d.funcao)}</span>`:""}
+      <span style="font-size:11px;background:#EEF2FF;color:#3730A3;padding:2px 8px;border-radius:5px">${x(nf)}</span>
       ${(d.onde||[]).map(o=>`<span style="font-size:11px;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:5px">${x(o)}</span>`).join("")}
     </div>
   </div>
   <span style="font-size:11px;background:${sv.bg};color:${sv.tc};padding:3px 10px;border-radius:6px;white-space:nowrap;flex-shrink:0">${sv.l}</span>
 </div>
-${d.prazoD||d.prazoR||ve?`<div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
-  ${d.prazoD?`<span style="font-size:11px;color:#6B7280">📅 Desejado: <strong>${fdi(d.prazoD)}</strong></span>`:""}
-  ${d.prazoR?`<span style="font-size:11px;color:#059669">✓ Real: <strong>${fdi(d.prazoR)}</strong></span>`:""}
+<div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+  <span style="font-size:11px;color:#6B7280">📅 Solicitado: <strong>${fd(d.criado)}</strong></span>
+  ${d.prazoR?`<span style="font-size:11px;color:#059669">⚡ Prazo real: <strong>${fdi(d.prazoR)}</strong></span>`:""}
   ${ve?`<span style="font-size:11px;color:${atras(d)?'#B91C1C':'#6B7280'};font-weight:600">${ve}</span>`:""}
-</div>`:""}
+</div>
 </div>`;
 }).join("")}
 </div></div>`;
