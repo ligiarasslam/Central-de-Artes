@@ -400,6 +400,7 @@ let calMode="mes",calDayDate=new Date();
 let detailId=null,revisaoMode=false,commText="",delId=null,loading=true,editId=null;
 let showViewer=false,viewerCardId=null,viewerIdx=0,viewerRevOpt=null,viewerRevText="";
 let linkUrl="",linkLabel="",linkModo="referencia",showLinkForm=false;
+let accInfo=true,accRoteiro=true,editRoteiro=false,roteiroText="";
 let showLogin=false;
 let showUserMgmt=false;
 let showChangePin=false;
@@ -470,6 +471,9 @@ function toEmbedUrl(url){
   // Google Drive open?id=
   const driveOpen=url.match(/drive\.google\.com\/open\?id=([^&]+)/);
   if(driveOpen)return`https://drive.google.com/file/d/${driveOpen[1]}/preview`;
+  // Google Drive folder
+  const driveFolder=url.match(/drive\.google\.com\/drive\/folders\/([^\/\?]+)/);
+  if(driveFolder)return`https://drive.google.com/embeddedfolderview?id=${driveFolder[1]}#list`;
   // Canva view
   if(url.includes("canva.com")&&url.includes("/view"))return url.includes("?embed")?url:url+"?embed";
   return url;
@@ -943,9 +947,33 @@ function bDetail(d){
     </div>
   </div>`:""}
 
-  <div class="dsec">
-    <div class="dslbl">Informações e observações</div>
-    ${fullInfo.trim()?`<div class="dinb">${x(fullInfo.trim())}</div>`:`<div class="dine">Nenhuma observação informada.</div>`}
+  <div class="dsec" style="padding:0">
+    <div onclick="accInfo=!accInfo;render()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;border-radius:8px;background:#F9FAFB;border:1px solid #E5E7EB">
+      <div class="dslbl" style="margin:0">Informações e observações</div>
+      <span style="color:#6B7280;font-size:14px">${accInfo?"▲":"▼"}</span>
+    </div>
+    ${accInfo?`<div style="padding:10px 2px 2px">
+      ${fullInfo.trim()?`<div class="dinb">${x(fullInfo.trim())}</div>`:`<div class="dine">Nenhuma observação informada.</div>`}
+    </div>`:""}
+  </div>
+
+  <div class="dsec" style="padding:0">
+    <div onclick="accRoteiro=!accRoteiro;render()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;border-radius:8px;background:#F0FDF4;border:1px solid #BBF7D0">
+      <div class="dslbl" style="margin:0;color:#166534">📋 Roteiro e instruções de criação</div>
+      <span style="color:#166534;font-size:14px">${accRoteiro?"▲":"▼"}</span>
+    </div>
+    ${accRoteiro?`<div style="padding:10px 2px 2px">
+      ${editRoteiro&&admin?`
+        <textarea id="roteiro-ta" rows="6" style="width:100%;box-sizing:border-box;border:1px solid #D1D5DB;border-radius:7px;padding:10px;font-size:13px;font-family:'Manrope',sans-serif;resize:vertical">${x(roteiroText)}</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button onclick="saveRoteiro('${d.id}')" style="padding:7px 16px;background:#1A7A38;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600">Salvar</button>
+          <button onclick="editRoteiro=false;render()" style="padding:7px 14px;border:1px solid #D1D5DB;background:#fff;border-radius:6px;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif">Cancelar</button>
+        </div>`:`
+        <div style="position:relative">
+          ${d.roteiro&&d.roteiro.trim()?`<div class="dinb" style="border-color:#BBF7D0;background:#F0FDF4;color:#14532D;white-space:pre-wrap">${x(d.roteiro.trim())}</div>`:`<div class="dine">${admin?"Nenhum roteiro definido ainda. Clique em Editar para adicionar.":"Nenhum roteiro definido ainda."}</div>`}
+          ${admin?`<button onclick="roteiroText='${(d.roteiro||"").replace(/'/g,"\\'")}';editRoteiro=true;render()" style="position:absolute;top:0;right:0;padding:3px 10px;font-size:11px;border:1px solid #D1D5DB;background:#fff;border-radius:5px;cursor:pointer;font-family:'Manrope',sans-serif">✏ Editar</button>`:""}
+        </div>`}
+    </div>`:""}
   </div>
 
   ${sessao?`<div class="dsec">
@@ -1050,6 +1078,7 @@ function bDetail(d){
         else if(h.tipo==="comentario"){dc="cm";desc="Comentário";ico="💬";}
         else if(h.tipo==="edicao"){dc="pr";desc="Solicitação editada";ico="✏";}
         else if(h.tipo==="link_add"){dc="cm";desc=`Link adicionado: <strong>${x(h.label)}</strong>`;ico="🔗";}
+        else if(h.tipo==="roteiro"){dc="pr";desc="Roteiro atualizado";ico="📋";}
         else if(h.tipo==="aprovacao"){dc="cr";desc=`✓ Aprovado · <strong>${x(h.opcao||"")}</strong>`;ico="✅";}
         else if(h.tipo==="revisao_opcao"){dc="st";desc=`Revisão solicitada · ${x(h.opcao||"")}`;ico="↩";}
         return`<div class="hi">
@@ -1263,6 +1292,7 @@ function ev(){
   el("comm-ta")?.addEventListener("input",e=>{commText=e.target.value;});
   el("rev-ta")?.addEventListener("input",e=>{commText=e.target.value;});
   el("vrev-ta")?.addEventListener("input",e=>{viewerRevText=e.target.value;});
+  el("roteiro-ta")?.addEventListener("input",e=>{roteiroText=e.target.value;});
   el("linp-url")?.addEventListener("input",e=>{linkUrl=e.target.value;});
   el("linp-lbl")?.addEventListener("input",e=>{linkLabel=e.target.value;});
   el("linp-modo")?.addEventListener("change",e=>{linkModo=e.target.value;});
@@ -1297,7 +1327,7 @@ window.calNext=function(){
 window.goEnvAprov=function(){fstt="enviar_aprovacao";render();};
 window.openDet=function(id){
   if(!sessao){showVisitorPopup=true;render();return;}
-  detailId=id;revisaoMode=false;commText="";render();
+  detailId=id;revisaoMode=false;commText="";editRoteiro=false;roteiroText="";accInfo=true;accRoteiro=true;showLinkForm=false;render();
 };
 window.closeVisitorPopup=function(){showVisitorPopup=false;render();};
 window.closeDet=function(){detailId=null;revisaoMode=false;commText="";render();};
@@ -1469,6 +1499,16 @@ window.sendViewerRev=function(id){
 };
 
 // ── LINKS ────────────────────────────────────────────────
+window.saveRoteiro=function(id){
+  const ta=document.getElementById("roteiro-ta");
+  const txt=ta?ta.value:roteiroText;
+  D=D.map(d=>{
+    if(d.id!==id)return d;
+    const hist=[...(d.historico||[]),{ts:Date.now(),tipo:"roteiro",autor:sessao?.nome||autor()}];
+    return{...d,roteiro:txt,historico:hist};
+  });
+  saveD();editRoteiro=false;render();
+};
 window.toggleLinkForm=function(){showLinkForm=!showLinkForm;linkUrl="";linkLabel="";linkModo="referencia";render();};
 window.addLink=function(id){
   const url=(document.getElementById("linp-url")?.value||"").trim();
