@@ -448,7 +448,7 @@ function atras(d){
 }
 function venceEm(d){
   if(d.status==="aprovado"||d.status==="entregue")return null;
-  const prazo=d.prazoR||d.prazoD;
+  const prazo=d.prazoR;
   if(!prazo)return null;
   const hoje=new Date();hoje.setHours(0,0,0,0);
   const alvo=new Date(prazo);alvo.setHours(0,0,0,0);
@@ -499,9 +499,6 @@ function chgStatus(d,ns){
 // ── RENDER ──────────────────────────────────────────────
 function render(){
   document.getElementById("app").innerHTML=buildApp();
-  // Restore search focus if needed
-  const _si=document.getElementById('srch-inp');
-  if(_si&&_lastFocusedId==='srch-inp'){_si.focus();_si.setSelectionRange(_si.value.length,_si.value.length);}
   ev();
 }
 
@@ -552,7 +549,6 @@ ${sessao
       <option value="real" ${sortBy==="real"?"selected":""}>↑ Prazo real</option>
     </select>
     ${nome?`<button class="btn-meus ${fmeus?"on":""}" id="btn-m">Meus pedidos</button>`:""}
-    <input class="srch" id="srch-inp" placeholder="Buscar nome..." value="${x(fsrc)}" onfocus="_lastFocusedId='srch-inp'" onblur="_lastFocusedId=''"/>
   </div>
 </div>
 ${admin&&envCnt>0?`<div class="banner">⚡ ${envCnt} demanda${envCnt>1?"s":""} aguardando envio para aprovação<button class="bnr-btn" onclick="goEnvAprov()">Ver todas</button></div>`:""}
@@ -591,20 +587,24 @@ function bCard(d,compact){
   const showPost=hasInsta(d)&&d.diaPostagem;
 
   if(compact){
+    const ve=venceEm(d);
+    const nomeFunc=d.nome+(d.funcao?` · ${d.funcao}`:"");
+    const tagsOnde=d.onde&&d.onde.length?d.onde.map(o=>`<span style="font-size:9px;background:#F3F4F6;color:#374151;padding:1px 6px;border-radius:4px">${x(o==="Outros"?(d.ondeO||"Outros"):o)}</span>`).join(""):"";
     return`<div class="kcard" onclick="openDet('${d.id}')">
 ${isAprov?`<div class="aicon">!</div>`:""}
 <div class="kcinn"><div class="kst" style="background:${sc}"></div>
 <div class="kbd">
-<div class="kbdgs">
-  <span class="ebdg ${isG?"g":"p"}" style="font-size:10px;padding:1px 6px">${x(d.empresa||"—")}</span>
-  ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}" style="font-size:10px;padding:1px 6px">${x(d.responsavel)}</span>`:""}
+<div class="ktipo" style="font-size:12px;font-weight:700;color:#111;margin-bottom:5px;line-height:1.3">${x(tl)}</div>
+<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px">
+  <span class="ebdg ${isG?"g":"p"}" style="font-size:9px;padding:1px 6px">${x(d.empresa||"—")}</span>
+  <span style="font-size:9px;background:#EEF2FF;color:#3730A3;padding:1px 6px;border-radius:4px">${x(nomeFunc)}</span>
+  ${d.responsavel&&admin?`<span class="rbdg ${d.responsavel==="Lígia"?"li":"ru"}" style="font-size:9px;padding:1px 6px">${x(d.responsavel)}</span>`:""}
 </div>
-<div class="kname">${x(d.nome)}</div>
-<div class="ktipo">${x(tl)}</div>
-${at?`<div style="font-size:10px;color:#B91C1C;font-weight:700;margin-bottom:3px">⚠ Vencido</div>`:""}
-<div class="kdts">📅 <strong>${fdi(d.prazoD)}</strong>${d.prazoR?` · ⚡<strong>${fdi(d.prazoR)}</strong>`:""}</div>
-${(()=>{const ve=venceEm(d);return ve?`<div style="font-size:10px;font-weight:600;color:${atras(d)?'#B91C1C':'#6B7280'};margin-top:2px">${ve}</div>`:""})()}
-${showPost?`<div class="kpost ${d.postado?"postado-done":""}">📸 ${fdi(d.diaPostagem)}${d.postado?" · ✓ Postado":""}</div>`:""}
+${tagsOnde?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px">${tagsOnde}</div>`:""}
+<div style="font-size:10px;color:#6B7280;margin-bottom:2px">Solicitado: <strong>${fd(d.criado)}</strong></div>
+${d.prazoR?`<div style="font-size:10px;color:#059669;margin-bottom:2px">Prazo real: <strong>${fdi(d.prazoR)}</strong></div>`:""}
+${at?`<div style="font-size:10px;color:#B91C1C;font-weight:700;margin-bottom:2px">⚠ Vencido</div>`:""}
+${ve?`<div style="font-size:10px;font-weight:600;color:${at?'#B91C1C':'#6B7280'}">${ve}</div>`:""}
 </div></div></div>`;
   }
 
@@ -747,7 +747,7 @@ ${DIAS_S.map(d=>`<div class="cahdr">${d}</div>`).join("")}
 ${cells.map(cell=>{
   const todayF=cell.curr&&new Date(calY,calM,cell.day).getTime()===today.getTime();
   const cards=cell.curr?(dm[cell.day]||[]):[];
-  return`<div class="cacell ${!cell.curr?"om":""} ${todayF?"td":""}">
+  return`<div class="cacell ${!cell.curr?"om":""} ${todayF?"td":""}" ${cell.curr?`onclick="goToDay(${calY},${calM},${cell.day})" style="cursor:pointer"`:""}>
 <div class="caday">${cell.day}</div>
 ${cards.slice(0,3).map(d=>{
   const isG=d.empresa==="Germisul";
@@ -781,7 +781,7 @@ ${days.map(dt=>{
   const isToday=dt.getTime()===today.getTime();
   const cards=cardsForDate(dt);
   return`<div style="background:${isToday?'#F0FDF4':'#F9FAFB'};border:1px solid ${isToday?'#86EFAC':'#E5E7EB'};border-radius:8px;min-height:120px;padding:8px">
-<div style="font-weight:700;font-size:13px;color:${isToday?'#166534':'#374151'};margin-bottom:6px;text-align:center">${DIAS_S[dt.getDay()]}<br><span style="font-size:18px">${dt.getDate()}</span></div>
+<div onclick="goToDay(${dt.getFullYear()},${dt.getMonth()},${dt.getDate()})" style="font-weight:700;font-size:13px;color:${isToday?'#166534':'#374151'};margin-bottom:6px;text-align:center;cursor:pointer;text-decoration:underline dotted">${DIAS_S[dt.getDay()]}<br><span style="font-size:18px">${dt.getDate()}</span></div>
 ${cards.length===0?`<div style="font-size:11px;color:#D1D5DB;text-align:center">—</div>`:""}
 ${cards.map(d=>{
   const isG=d.empresa==="Germisul";
@@ -1111,7 +1111,6 @@ function ev(){
   el("sel-emp")?.addEventListener("change",e=>{femp=e.target.value;render();});
   el("sel-sort")?.addEventListener("change",e=>{sortBy=e.target.value;render();});
   el("btn-m")?.addEventListener("click",()=>{fmeus=!fmeus;render();});
-  el("srch-inp")?.addEventListener("input",e=>{fsrc=e.target.value;_lastFocusedId='srch-inp';render();});
   el("inp-n")?.addEventListener("keydown",e=>{if(e.key==="Enter")setNome();});
   qsa("[data-cid]").forEach(c=>c.addEventListener("click",e=>{
     if(e.target.closest(".astrip")||e.target.closest(".post-chk"))return;
@@ -1155,7 +1154,12 @@ function qsa(s){return document.querySelectorAll(s);}
 // ── ACTIONS ──────────────────────────────────────────────
 window.setNome=function(){const v=(el("inp-n")?.value||"").trim();if(v){nome=v;saveN(v);render();}};
 window.setView=function(v){view=v;render();};
-window.setCalMode=function(m){calMode=m;if(m==="dia"||m==="semana"){calDayDate=new Date(calY,calM,1);}render();};
+window.setCalMode=function(m){
+  calMode=m;
+  if(m==="semana"||m==="dia"){calDayDate=new Date();calY=calDayDate.getFullYear();calM=calDayDate.getMonth();}
+  render();
+};
+window.goToDay=function(y,mo,dy){calMode="dia";calDayDate=new Date(y,mo,dy);calY=y;calM=mo;render();};
 window.calPrev=function(){
   if(calMode==="mes"){calM--;if(calM<0){calM=11;calY--;}}
   else if(calMode==="semana"){calDayDate=new Date(calDayDate.getTime()-7*86400000);}
